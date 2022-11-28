@@ -1,8 +1,9 @@
 const express = require("express");
-const loginController = require("../controllers/loginController");
+const categoryController = require("../controllers/categoryController");
 const { verifyToken } = require("../middlewares/loginMiddleware");
+
 const router = express.Router();
 
-router.post("/login", loginController.loginAdmin);
+router.get("/", categoryController.getAllCategory);
 
 module.exports = router;
