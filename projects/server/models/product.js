@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Product.hasMany(models.ProductBranch);
+      Product.belongsTo(models.Category);
     }
   }
   Product.init(
@@ -29,12 +30,17 @@ module.exports = (sequelize, DataTypes) => {
       distance: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        allowNull: false,
+      },
+      product_image: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
     },
     {
       sequelize,
       modelName: "Product",
     }
-  )
+  );
   return Product;
-}
+};

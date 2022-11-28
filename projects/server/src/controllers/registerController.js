@@ -37,7 +37,7 @@ const registerContoller = {
       const myReferralCode = (length) => {
         let result = "";
         let characters =
-          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%$#!@&";
         let charactersLength = characters.length;
         for (let i = 0; i < length; i++) {
           result += characters.charAt(
@@ -61,7 +61,7 @@ const registerContoller = {
           password: hashedPassword,
           phone_number: phone_number,
           username: defaultUsername(email),
-          my_referral_code: myReferralCode(5),
+          my_referral_code: myReferralCode(6),
           RoleId: parseUserRole[0].id,
         });
 
@@ -115,7 +115,7 @@ const registerContoller = {
         phone_number: phone_number,
         referral_code: referral_code,
         username: defaultUsername(email),
-        my_referral_code: myReferralCode(5),
+        my_referral_code: myReferralCode(6),
         RoleId: parseUserRole[0].id,
       });
 
@@ -188,7 +188,7 @@ const registerContoller = {
         }
       );
 
-      return res.redirect("http://localhost:3000/register/login");
+      return res.redirect("http://localhost:3000/login/user");
     } catch (error) {
       return res.status(500).json({
         message: "server error",

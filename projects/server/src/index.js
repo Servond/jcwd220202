@@ -4,15 +4,13 @@ const cors = require("cors");
 const { join } = require("path");
 const db = require("../models");
 const dotenv = require("dotenv");
-
+const fs = require("fs");
 
 // dotenv.config();
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-app.use(
-  cors()
-);
+app.use(cors());
 
 app.use(express.json());
 
@@ -21,16 +19,22 @@ app.use(express.json());
 // ===========================
 // NOTE : Add your routes here
 const registerRoute = require("./routes/registerRoute");
-const loginRoute = require("./routes/loginRoute.js")
-const profileRoute = require("./routes/userProfileRoute.js")
-const loginAdminRoute = require("./routes/loginAdminRoute.js")
+const loginRoute = require("./routes/loginRoute.js");
+const profileRoute = require("./routes/userProfileRoute.js");
+const loginAdminRoute = require("./routes/loginAdminRoute.js");
+const categoryRoute = require("./routes/categoryRoute");
+const adminProductRoute = require("./routes/adminProductRoute");
 const productRoute = require("./routes/productRoute.js")
 
-app.use('/user', loginRoute)
-app.use('/profile', profileRoute)
-app.use('/admin', loginAdminRoute)
-app.use("/register", registerRoute)
+app.use("/user", loginRoute);
+app.use("/profile", profileRoute);
+app.use("/admin", loginAdminRoute);
+app.use("/register", registerRoute);
+app.use("/category", categoryRoute);
+app.use("/admin-product", adminProductRoute);
 app.use("/product", productRoute);
+
+app.use("/public", express.static("public"));
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
@@ -78,6 +82,10 @@ app.get("*", (req, res) => {
 
 app.listen(PORT, async (err) => {
   db.sequelize.sync({ alter: true });
+
+  if (!fs.existsSync("public")) {
+    fs.mkdirSync("public");
+  }
 
   if (err) {
     console.log(`ERROR: ${err}`);

@@ -17,10 +17,11 @@ import {
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { DragHandleIcon, SearchIcon } from "@chakra-ui/icons"
+import { SearchIcon } from "@chakra-ui/icons"
 import Navigation from "../components/NavigationBar"
 import { categories } from "../components/category"
 import other from "../assets/4square.png"
+import banner1 from "../assets/banner1.png"
 
 const Home = () => {
     const [keywordHandler, setKeywordHandler] = useState("")
@@ -31,15 +32,16 @@ const Home = () => {
             <Box pt={"10px"}>
                 <Flex display={"flex"}>
                     <FormControl>
-                        <InputGroup size="md" w={"340px"}>
+                        <InputGroup size="md">
                             <InputRightElement
                                 pointerEvents="none"
                                 children={<SearchIcon color="F2CC8F" />}
                                 size="md"
+                                mr={"5"}
                             />
                             <Input
-                                w={"340px"}
                                 ml={"5"}
+                                mr={"5"}
                                 variant="outline"
                                 size="md"
                                 placeholder={``}
@@ -64,12 +66,12 @@ const Home = () => {
                             cursor: "pointer",
                         }}
                     >
-                        <Link to="/login">Login</Link>
+                        <Link to="/login/user">Login</Link>
                     </Box>
                 </Flex>
             </Box>
-            <Box h={"100px"} mt={"10px"} bgColor={"#F4F1DE"}>
-                Banner
+            <Box h={"200px"} mt={"10px"} bgColor={"#F4F1DE"}>
+                <Image src={banner1} w={"100%"} h={"100%"} />
             </Box>
             <SimpleGrid
                 columns={"4"}
@@ -82,7 +84,7 @@ const Home = () => {
             >
                 {categories.slice(0, 7).map((item) => {
                     return (
-                        <Box key={item.icon} display={"grid"}>
+                        <Box display={"grid"}>
                             <Image
                                 justifySelf={"center"}
                                 src={item.icon}
@@ -130,7 +132,6 @@ const Home = () => {
                         </MenuList>
                     </Menu>
                 </Box>
-            <Box w={"430px"} height={"400px"} bgColor="white" ></Box>
             </Box>
             <Navigation />
         </Box>

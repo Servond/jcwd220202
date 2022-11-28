@@ -126,7 +126,10 @@ const Register = () => {
           marginTop={0}
           fontFamily={"Roboto"}
         >
-          <form onSubmit={formik.handleSubmit}>
+          <form
+            onSubmit={formik.handleSubmit}
+            // isDisabled={formik.isSubmitting}
+          >
             <FormControl mt={"10px"} isInvalid={formik.errors.email}>
               <FormLabel fontWeight={"bold"}>Email</FormLabel>
               <Input
