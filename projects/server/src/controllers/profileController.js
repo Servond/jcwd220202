@@ -14,7 +14,7 @@ const profileController = {
         },
         {
           where: {
-            id: req.params.id,
+            id: req.user.id,
           },
         }
       )

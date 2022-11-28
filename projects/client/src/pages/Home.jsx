@@ -82,7 +82,7 @@ const Home = () => {
             >
                 {categories.slice(0, 7).map((item) => {
                     return (
-                        <Box display={"grid"}>
+                        <Box key={item.icon} display={"grid"}>
                             <Image
                                 justifySelf={"center"}
                                 src={item.icon}
@@ -130,6 +130,7 @@ const Home = () => {
                         </MenuList>
                     </Menu>
                 </Box>
+            <Box w={"430px"} height={"400px"} bgColor="white" ></Box>
             </Box>
             <Navigation />
         </Box>

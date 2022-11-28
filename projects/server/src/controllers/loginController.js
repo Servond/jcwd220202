@@ -20,11 +20,11 @@ const userController = {
         })
       }
 
-      // const passwordValid = bcrypt.compareSync(
-      //   password,
-      //   findUserByEmail.password
-      // )  
-      if (!password) {
+      const passwordValid = bcrypt.compareSync(
+        password,
+        findUserByEmail.password
+      )
+      if (!passwordValid) {
         return res.status(400).json({
           message: "Wrong password",
         })
@@ -107,7 +107,7 @@ const userController = {
         token: renewedToken,
       })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       return res.status(500).json({
         message: "Server error",
       })

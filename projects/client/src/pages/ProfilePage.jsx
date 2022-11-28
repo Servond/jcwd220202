@@ -116,14 +116,17 @@ const ProfilePage = () => {
             bgColor={"white"}
           />
           <Text fontWeight={"bold"}>Gender:</Text>
-          <Input
+          <Select
             value={formik.values.gender}
             name="gender"
             onChange={formChangeHandler}
-            placeholder={userData.gender}
-            size="md"
+            placeholder={"Select gender"}
             bgColor={"white"}
-          />
+          >
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Others">Others</option>
+          </Select>
           <Text fontWeight={"bold"}>Date of Birth:</Text>
           <Input
             value={formik.values.birth}
@@ -166,7 +169,7 @@ const ProfilePage = () => {
           <Text fontSize={"16"}>{userData.email}</Text>
           <Spacer />
           <Link to="/address">
-          <Text fontStyle={"italic"}>Change email</Text>
+            <Text fontStyle={"italic"}>Change email</Text>
           </Link>
         </HStack>
         <Text fontWeight={"bold"}>Password:</Text>
@@ -176,7 +179,7 @@ const ProfilePage = () => {
           <Text fontStyle={"italic"}>Change password</Text>
         </Flex>
         <Text fontWeight={"bold"}>Referral Code:</Text>
-        <Text fontWeight={"bold"}>H4J12030</Text>
+        <Text fontWeight={"bold"}>{userData.my_referral_code}</Text>
       </Stack>
 
       <Box marginTop={"20px"} textAlign={"center"}>

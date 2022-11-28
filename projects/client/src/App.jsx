@@ -9,6 +9,7 @@ import Home from "./pages/Home"
 import AdminDashboard from "./pages/AdminDashboard"
 import CategoryList from "./pages/Category"
 import Register from "./pages/Register"
+import ProductPage from "./pages/ProductPage"
 import { useDispatch, useSelector } from "react-redux"
 import { axiosInstance } from "./api"
 import { useState } from "react"
@@ -83,6 +84,7 @@ const App = () => {
         <Route path="/login/admin" element={<LoginAdminPage />} />
         <Route path="/address" element={<AddressPage />} />
         <Route path="/register/user" element={<Register />} />
+        <Route path="/product" element={<ProductPage />} />
         {renderUserRoutes()}
         {renderAdminRoutes()}
       </Routes>

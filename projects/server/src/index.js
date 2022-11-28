@@ -24,11 +24,13 @@ const registerRoute = require("./routes/registerRoute");
 const loginRoute = require("./routes/loginRoute.js")
 const profileRoute = require("./routes/userProfileRoute.js")
 const loginAdminRoute = require("./routes/loginAdminRoute.js")
+const productRoute = require("./routes/productRoute.js")
 
 app.use('/user', loginRoute)
 app.use('/profile', profileRoute)
 app.use('/admin', loginAdminRoute)
-app.use("/register", registerRoute);
+app.use("/register", registerRoute)
+app.use("/product", productRoute);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

@@ -8,13 +8,13 @@ const AddressList = ({}) => {
   const fetchAddress = async () => {
     try {
       const response = await axiosInstance.get("/address")
-
+      console.log(response.data.data)
       setAddress(response.data.data)
     } catch (err) {
       console.log(err)
     }
   }
-
+  console.log(address);
   useEffect(() => {
     fetchAddress()
   }, [])
