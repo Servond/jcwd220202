@@ -1,5 +1,6 @@
 import { Box, Text } from "@chakra-ui/react";
 import { Link, Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import LoginAdminPage from "./pages/LoginAdminPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -13,6 +14,8 @@ import { axiosInstance } from "./api";
 import { useState } from "react";
 import { useEffect } from "react";
 import { login } from "./redux/features/authSlice";
+import AdminCategory from "./pages/AdminCategory";
+import AddCategory from "./pages/AddCategory";
 import ForgotPassword from "./pages/ForgotPassword";
 import ReentryPassword from "./pages/ReentryPassword";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
@@ -46,37 +49,42 @@ const App = () => {
       setAuthCheck(true);
     }
   };
-
-  // const renderUserRoutes = () => {
-  //   if (authSelector.RoleId === "1") {
-  //     return (
-  //       <>
-  //         <Route path="/profile" element={<ProfilePage />} />
-  //       </>
-  //     );
-  //   }
-  //   return null;
-  // };
-
-  // const renderAdminRoutes = () => {
-  //   if (authSelector.RoleId === "2") {
-  //     return (
-  //       <>
-  //         <Route path="/" element={<Home />} />
-  //       </>
-  //     );
-  //   }
-  //   return null;
-  // };
+  const renderUserRoutes = () => {
+    if (authSelector.RoleId == "1") {
+      return (
+        <>
+          <Route path="/profile" element={<ProfilePage />} />
+        </>
+      );
+    }
+    return null;
+  };
 
   useEffect(() => {
     keepUserLoggedIn();
-  });
+  }, []);
+
+  const renderAdminRoutes = () => {
+    if (authSelector.RoleId == "2") {
+      return (
+        <>
+          <Route path="/homepage" element={<HomePage />} />
+        </>
+      );
+    }
+    return null;
+  };
 
   if (!authCheck) return <div>LOADING...</div>;
 
   return (
     <>
+      <Box bgColor="grey">
+        <Text>Hello World!</Text>
+        <Link to="/profile">go to profile</Link>
+        <Link to="/login/user">login user</Link>
+        <Link to="/login/admin">login admin</Link>
+      </Box>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -85,6 +93,10 @@ const App = () => {
         <Route path="/login/admin" element={<LoginAdminPage />} />
         <Route path="/address" element={<AddressPage />} />
         <Route path="/register/user" element={<Register />} />
+        <Route path="/admin/category" element={<AdminCategory />} />
+        <Route path="/add/category" element={<AddCategory />} />
+        {renderUserRoutes()}
+        {renderAdminRoutes()}
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reentry-password" element={<ReentryPassword />} />
         <Route

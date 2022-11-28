@@ -4,13 +4,18 @@ const db = require("../../models");
 const profileController = {
   updateProfile: async (req, res) => {
     try {
-      const { name, email, gender, birth } = req.body;
+      if (req.file) {
+        req.body.profile_picture = `http://localhost:8000/public/${req.file.filename}`;
+      }
+
+      const { name, gender, birth, profile_picture } = req.body;
 
       await db.User.update(
         {
           name: name,
           gender: gender,
           birth: birth,
+          profile_image_url: profile_picture,
         },
         {
           where: {

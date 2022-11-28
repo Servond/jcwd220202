@@ -1,15 +1,11 @@
 import {
   Box,
-  Button,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
-  useDisclosure,
 } from "@chakra-ui/react";
 
 const OtherMenuBar = ({ isOpen, closeModal }) => {
@@ -21,9 +17,6 @@ const OtherMenuBar = ({ isOpen, closeModal }) => {
         <ModalContent
           position={"fixed"}
           height={"60%"}
-          //   bottom={"0"}
-          //   right={"0"}
-          //   left={"0"}
           bottom={"-20"}
           marginLeft={"60%"}
           fontFamily={"roboto"}

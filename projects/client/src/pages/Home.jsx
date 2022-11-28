@@ -21,67 +21,55 @@ import { SearchIcon } from "@chakra-ui/icons";
 import Navigation from "../components/NavigationBar";
 import { categories } from "../components/category";
 import other from "../assets/4square.png";
+import banner1 from "../assets/banner1.png";
 
 const Home = () => {
   const [keywordHandler, setKeywordHandler] = useState("");
   const [order, setOrder] = useState("");
 
   return (
-    <Box bgColor={"#81B29A"} height={"932px"}>
-      <Box
-        height={"70px"}
-        paddingTop={"15px"}
-        position={"fixed"}
-        top={"0"}
-        bgColor={"#81B29A"}
-        right={"0"}
-        left={"0"}
-      >
-        <Flex>
-          <Box w="80%">
-            <FormControl>
-              <InputGroup width={"100%"}>
-                <InputRightElement
-                  pointerEvents="none"
-                  children={<SearchIcon color="F2CC8F" />}
-                  backgroundColor={"#F2CC8F"}
-                  mt={"5px"}
-                  mr={"5px"}
-                  height={"30px"}
-                />
-                <Input
-                  w={"340px"}
-                  ml={"5"}
-                  variant="outline"
-                  size="md"
-                  placeholder={``}
-                  name="input"
-                  value={keywordHandler}
-                  onChange={(event) => setKeywordHandler(event.target.value)}
-                  backgroundColor="white"
-                />
-              </InputGroup>
-            </FormControl>
-          </Box>
+    <Box bgColor={"#81B29A"}>
+      <Box pt={"10px"}>
+        <Flex display={"flex"}>
+          <FormControl>
+            <InputGroup size="md">
+              <InputRightElement
+                pointerEvents="none"
+                children={<SearchIcon color="F2CC8F" />}
+                size="md"
+                mr={"5"}
+              />
+              <Input
+                ml={"5"}
+                mr={"5"}
+                variant="outline"
+                size="md"
+                placeholder={``}
+                name="input"
+                value={keywordHandler}
+                onChange={(event) => setKeywordHandler(event.target.value)}
+              />
+            </InputGroup>
+          </FormControl>
           <Box
+            p={"2"}
+            mr={"5"}
             color="#E07A5F"
+            borderRadius="10px"
             as="b"
-            textAlign={"center"}
-            marginTop={"7px"}
             _hover={{
               background: "white",
               color: "#E07A5F",
               transition: "all 1000ms ease",
               cursor: "pointer",
             }}
-            w="20%"
           >
-            <Link to="/login">Login</Link>
+            <Link to="/login/user">Login</Link>
           </Box>
         </Flex>
       </Box>
-      <Box h={"100px"} mt={"70px"} bgColor={"#F4F1DE"}>
-        Banner
+      <Box h={"200px"} mt={"10px"} bgColor={"#F4F1DE"}>
+        <Image src={banner1} w={"100%"} h={"100%"} />
       </Box>
       <SimpleGrid
         columns={"4"}
@@ -118,29 +106,15 @@ const Home = () => {
       </SimpleGrid>
       <Box h={"600px"} bgColor={"#F4F1DE"} mt={"10px"} position={"relative"}>
         <Box ml={"5"} mt={"5"} position={"absolute"}>
-          <Menu preventOverflow={"hidden"}>
+          <Menu>
             <MenuButton as={Button} bgColor={"#81B29A"}>
               Sort
             </MenuButton>
-            <MenuList>
+            <MenuList minWidth="240px">
               <MenuOptionGroup
                 type="radio"
                 onChange={(value) => setOrder(value)}
               >
-                <MenuItemOption value="ASC">A - Z</MenuItemOption>
-                <MenuItemOption value="DESC">Z - A</MenuItemOption>
-                <MenuItemOption value="ASC">A - Z</MenuItemOption>
-                <MenuItemOption value="DESC">Z - A</MenuItemOption>
-                <MenuItemOption value="ASC">A - Z</MenuItemOption>
-                <MenuItemOption value="DESC">Z - A</MenuItemOption>
-                <MenuItemOption value="ASC">A - Z</MenuItemOption>
-                <MenuItemOption value="DESC">Z - A</MenuItemOption>
-                <MenuItemOption value="ASC">A - Z</MenuItemOption>
-                <MenuItemOption value="DESC">Z - A</MenuItemOption>
-                <MenuItemOption value="ASC">A - Z</MenuItemOption>
-                <MenuItemOption value="DESC">Z - A</MenuItemOption>
-                <MenuItemOption value="ASC">A - Z</MenuItemOption>
-                <MenuItemOption value="DESC">Z - A</MenuItemOption>
                 <MenuItemOption value="ASC">A - Z</MenuItemOption>
                 <MenuItemOption value="DESC">Z - A</MenuItemOption>
               </MenuOptionGroup>
