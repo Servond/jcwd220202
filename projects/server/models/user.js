@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsTo(models.Role);
       User.hasMany(models.Address);
       User.hasOne(models.ReferralVoucher);
+      User.belongsTo(models.Branch);
+      User.hasMany(models.Cart);
     }
   }
   User.init(
@@ -25,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       password: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING, 
         allowNull: false,
       },
       birth: {

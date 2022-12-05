@@ -31,7 +31,7 @@ const AddCategory = () => {
                 newData.append("category_name", values.category_name)
                 newData.append("icon_url", values.icon_url)
 
-                await axiosInstance.post("/add", newData)
+                await axiosInstance.post("/category", newData)
 
                 formik.setFieldValue("category_name", "")
                 formik.setFieldValue("icon_url", null)
