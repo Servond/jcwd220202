@@ -1,29 +1,29 @@
-import { Box, Text } from "@chakra-ui/react"
-import { Link, Route, Routes } from "react-router-dom"
-import LoginPage from "./pages/LoginPage"
-import LoginAdminPage from "./pages/LoginAdminPage"
-import ProfilePage from "./pages/ProfilePage"
-import AddressPage from "./pages/AddressPage"
-import Home from "./pages/Home"
-import AdminDashboard from "./pages/AdminDashboard"
-import CategoryList from "./pages/Category"
-import Register from "./pages/Register"
-import { useDispatch, useSelector } from "react-redux"
-import { axiosInstance } from "./api"
-import { useState } from "react"
-import { useEffect } from "react"
-import { login } from "./redux/features/authSlice"
-import AdminCategory from "./pages/AdminCategory"
-import AddCategory from "./pages/AddCategory"
-import ForgotPassword from "./pages/ForgotPassword"
-import ReentryPassword from "./pages/ReentryPassword"
-import SuperAdminDashboard from "./pages/SuperAdminDashboard"
-import ProductListAdmin from "./pages/ProductListAdmin"
-import ProductListSprAdm from "./pages/ProductListSprAdm"
-import AddProductSprAdm from "./pages/AddProductSprAdm"
-import ProductDetailSprAdm from "./pages/ProductDetailSprAdm"
-import ProductDetailAdmin from "./pages/ProductDetailAdmin"
-import ProductPage from "./pages/ProductPage"
+import { Box, Text } from "@chakra-ui/react";
+import { Link, Route, Routes } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import LoginAdminPage from "./pages/LoginAdminPage";
+import ProfilePage from "./pages/ProfilePage";
+import AddressPage from "./pages/AddressPage";
+import Home from "./pages/Home";
+import AdminDashboard from "./pages/AdminDashboard";
+import CategoryList from "./pages/Category";
+import Register from "./pages/Register";
+import { useDispatch, useSelector } from "react-redux";
+import { axiosInstance } from "./api";
+import { useState } from "react";
+import { useEffect } from "react";
+import { login } from "./redux/features/authSlice";
+import AdminCategory from "./pages/AdminCategory";
+import AddCategory from "./pages/AddCategory";
+import ForgotPassword from "./pages/ForgotPassword";
+import ReentryPassword from "./pages/ReentryPassword";
+import SuperAdminDashboard from "./pages/SuperAdminDashboard";
+import ProductListAdmin from "./pages/ProductListAdmin";
+import ProductListSprAdm from "./pages/ProductListSprAdm";
+import AddProductSprAdm from "./pages/AddProductSprAdm";
+import ProductDetailSprAdm from "./pages/ProductDetailSprAdm";
+import ProductDetailAdmin from "./pages/ProductDetailAdmin";
+import ProductPage from "./pages/ProductPage";
 import ProductDetailUser from "./pages/ProductDetailUser"
 
 const App = () => {
