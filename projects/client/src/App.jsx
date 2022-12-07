@@ -24,7 +24,7 @@ import AddProductSprAdm from "./pages/AddProductSprAdm"
 import ProductDetailSprAdm from "./pages/ProductDetailSprAdm"
 import ProductDetailAdmin from "./pages/ProductDetailAdmin"
 import ProductPage from "./pages/ProductPage"
-import CategoryEdit from "./pages/EditCategory"
+import ProductDetailUser from "./pages/ProductDetailUser"
 import NotFound from "./pages/404Page"
 
 const App = () => {
@@ -55,7 +55,70 @@ const App = () => {
         if (authSelector.RoleId == "1") {
             return (
                 <>
-                    <Route path="/profile" element={<ProfilePage />} />
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route
+                            path="/admin/dashboard"
+                            element={<AdminDashboard />}
+                        />
+                        <Route path="/category" element={<CategoryList />} />
+                        <Route path="/login/user" element={<LoginPage />} />
+                        <Route
+                            path="/login/admin"
+                            element={<LoginAdminPage />}
+                        />
+                        <Route path="/address" element={<AddressPage />} />
+                        <Route path="/register/user" element={<Register />} />
+                        <Route path="/product" element={<ProductPage />} />
+                        <Route
+                            path="/super-admin/category"
+                            element={<AdminCategory />}
+                        />
+                        <Route
+                            path="/super-admin/category/add"
+                            element={<AddCategory />}
+                        />
+                        {renderUserRoutes()}
+                        {/* {renderAdminRoutes()} */}
+                        <Route
+                            path="/forgot-password"
+                            element={<ForgotPassword />}
+                        />
+                        <Route
+                            path="/reentry-password"
+                            element={<ReentryPassword />}
+                        />
+                        <Route
+                            path="/super-admin/dashboard"
+                            element={<SuperAdminDashboard />}
+                        />
+                        <Route
+                            path="/admin/product"
+                            element={<ProductListAdmin />}
+                        />
+                        <Route path="/profile" element={<ProfilePage />} />
+                        <Route
+                            path="/super-admin/product"
+                            element={<ProductListSprAdm />}
+                        />
+                        <Route
+                            path="/super-admin/product/add"
+                            element={<AddProductSprAdm />}
+                        />
+                        <Route
+                            path="/super-admin/product/:id"
+                            element={<ProductDetailSprAdm />}
+                        />
+                        <Route
+                            path="/admin/product/:id"
+                            element={<ProductDetailAdmin />}
+                        />
+                        <Route
+                            path="/category/:id"
+                            element={<CategoryEdit />}
+                        />
+                        <Route path="/404" element={<NotFound />} />
+                    </Routes>
                 </>
             )
         }
@@ -87,17 +150,11 @@ const App = () => {
                 <Route path="/category" element={<CategoryList />} />
                 <Route path="/login/user" element={<LoginPage />} />
                 <Route path="/login/admin" element={<LoginAdminPage />} />
-                <Route path="/address" element={<AddressPage />} />
+                {/* <Route path="/address" element={<AddressPage />} /> */}
                 <Route path="/register/user" element={<Register />} />
                 <Route path="/product" element={<ProductPage />} />
-                <Route
-                    path="/super-admin/category"
-                    element={<AdminCategory />}
-                />
-                <Route
-                    path="/super-admin/category/add"
-                    element={<AddCategory />}
-                />
+                <Route path="/admin/category" element={<AdminCategory />} />
+                <Route path="/add/category" element={<AddCategory />} />
                 {renderUserRoutes()}
                 {/* {renderAdminRoutes()} */}
                 <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -124,8 +181,7 @@ const App = () => {
                     path="/admin/product/:id"
                     element={<ProductDetailAdmin />}
                 />
-                <Route path="/category/:id" element={<CategoryEdit />} />
-                <Route path="/404" element={<NotFound />} />
+                <Route path="/product/:id" element={<ProductDetailUser />} />
             </Routes>
         </>
     )

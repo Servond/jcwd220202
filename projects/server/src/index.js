@@ -18,6 +18,7 @@ app.use(express.json())
 
 // ===========================
 // NOTE : Add your routes here
+
 const registerRoute = require("./routes/registerRoute")
 const loginRoute = require("./routes/loginRoute.js")
 const profileRoute = require("./routes/userProfileRoute.js")
@@ -25,6 +26,8 @@ const loginAdminRoute = require("./routes/loginAdminRoute.js")
 const categoryRoute = require("./routes/categoryRoute")
 const adminProductRoute = require("./routes/adminProductRoute")
 const productRoute = require("./routes/productRoute.js")
+const geocodeRoute = require("./routes/geocodeRoute")
+const createAdminRoute = require("./routes/createAdminRoute")
 const passwordRoute = require("./routes/passwordRoute.js")
 
 app.use("/user", loginRoute)
@@ -34,6 +37,8 @@ app.use("/register", registerRoute)
 app.use("/category", categoryRoute)
 app.use("/admin-product", adminProductRoute)
 app.use("/product", productRoute)
+app.use("/geocode", geocodeRoute)
+app.use("/create-admin", createAdminRoute)
 app.use("/password", passwordRoute)
 
 app.use("/public", express.static("public"))
