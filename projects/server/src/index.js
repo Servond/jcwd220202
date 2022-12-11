@@ -27,6 +27,9 @@ const adminProductRoute = require("./routes/adminProductRoute");
 const productRoute = require("./routes/productRoute.js");
 const geocodeRoute = require("./routes/geocodeRoute");
 const createAdminRoute = require("./routes/createAdminRoute");
+const adminBranchRoute = require("./routes/adminBranchRoute");
+const productHistoryRoute = require("./routes/productHistoryRoute");
+const adminTransactionRoute = require("./routes/adminTransactionRoute");
 
 app.use("/user", loginRoute);
 app.use("/profile", profileRoute);
@@ -37,6 +40,9 @@ app.use("/admin-product", adminProductRoute);
 app.use("/product", productRoute);
 app.use("/geocode", geocodeRoute);
 app.use("/create-admin", createAdminRoute);
+app.use("/admin-branch", adminBranchRoute);
+app.use("/product-history", productHistoryRoute);
+app.use("/admin-transaction", adminTransactionRoute);
 
 app.use("/public", express.static("public"));
 

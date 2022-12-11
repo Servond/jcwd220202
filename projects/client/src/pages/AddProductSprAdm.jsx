@@ -50,6 +50,7 @@ const AddProductSprAdm = () => {
   };
 
   const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
+  const FILE_SIZE = 1282810;
 
   const fetchCategory = async () => {
     try {
@@ -124,6 +125,11 @@ const AddProductSprAdm = () => {
           "format",
           "extension file doesn't match",
           (value) => !value || (value && SUPPORTED_FORMATS.includes(value.type))
+        )
+        .test(
+          "file size",
+          "Uploaded file is too big.",
+          (value) => !value || (value && value.size <= FILE_SIZE)
         ),
       product_name: Yup.string().required("product name is a required field"),
       product_price: Yup.number()
