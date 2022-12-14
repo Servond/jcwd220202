@@ -30,6 +30,7 @@ const createAdminRoute = require("./routes/createAdminRoute");
 const adminBranchRoute = require("./routes/adminBranchRoute");
 const productHistoryRoute = require("./routes/productHistoryRoute");
 const adminTransactionRoute = require("./routes/adminTransactionRoute");
+const passwordRoute = require("./routes/passwordRoute.js");
 
 app.use("/user", loginRoute);
 app.use("/profile", profileRoute);
@@ -43,6 +44,7 @@ app.use("/create-admin", createAdminRoute);
 app.use("/admin-branch", adminBranchRoute);
 app.use("/product-history", productHistoryRoute);
 app.use("/admin-transaction", adminTransactionRoute);
+app.use("/password", passwordRoute);
 
 app.use("/public", express.static("public"));
 

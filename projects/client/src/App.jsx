@@ -59,7 +59,7 @@ const App = () => {
     if (authSelector.RoleId == "1") {
       return (
         <>
-          <Route path="/profile" element={<ProfilePage />} />
+          <Routes></Routes>
         </>
       );
     }
@@ -126,7 +126,7 @@ const App = () => {
           <Route path="/product" element={<ProductPage />} />
           <Route path="/admin/category" element={<AdminCategory />} />
           <Route path="/add/category" element={<AddCategory />} />
-          {renderUserRoutes()}
+          {/* {renderUserRoutes()} */}
           {/* {renderAdminRoutes()} */}
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reentry-password" element={<ReentryPassword />} />
