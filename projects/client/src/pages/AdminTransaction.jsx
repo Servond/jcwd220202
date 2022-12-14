@@ -37,8 +37,8 @@ const AdminTransaction = () => {
   const [activePage, setActivePage] = useState(1);
 
   const optionsSort = [
-    { value: "createdAt ASC", label: "latest" },
-    { value: "createdAt DESC", label: "oldest" },
+    { value: "createdAt ASC", label: "Latest" },
+    { value: "createdAt DESC", label: "Oldest" },
   ];
 
   const optionsFilter = [

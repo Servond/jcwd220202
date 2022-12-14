@@ -20,6 +20,7 @@ const AdminProductMutationCard = ({
   stock_movement,
   initial_stock,
   current_stock,
+  ProductId,
 }) => {
   const showTransItemId = () => {
     if (TransactionItemId === null) {
@@ -61,7 +62,7 @@ const AdminProductMutationCard = ({
     <>
       <Box marginTop={"20px"} mx={"20px"}>
         <Flex
-          // maxHeight={"185px"}
+          maxHeight={"185px"}
           fontFamily={"roboto"}
           color={"black"}
           border={"2px solid #E07A5F"}
@@ -80,18 +81,22 @@ const AdminProductMutationCard = ({
             >
               {branch_name || "branch name"}
             </Box>
-            <Box fontSize={"15px"} display={"flex"}>
-              <Text>Transc. Item ID:</Text>
-              {showTransItemId()}
-            </Box>
             <Box
               fontWeight={"bold"}
               overflow={"hidden"}
               textOverflow={"ellipsis"}
               whiteSpace={"nowrap"}
-              maxWidth={"180px"}
+              maxWidth={"130px"}
             >
               {product_name || "xxxx"}
+            </Box>
+            <Box fontSize={"15px"} display={"flex"}>
+              <Text>Product ID:</Text>
+              <Text ml={"5px"}>{ProductId || "Loading..."}</Text>
+            </Box>
+            <Box fontSize={"15px"} display={"flex"}>
+              <Text>Transc. Item ID:</Text>
+              {showTransItemId()}
             </Box>
             <Box>{createdAt.split("T")[0] || "12-02-2022"}</Box>
           </Box>

@@ -174,21 +174,6 @@ const ProductCardSprAdm = ({
               </Text>
             </Box>
           </Box>
-          {/* <Box flex="1.2">
-            <Link to={`/super-admin/product/${ProductId}`}>
-              <Button
-                borderRadius={"10px"}
-                my={"70px"}
-                marginRight={"5px"}
-                bgColor={"#81B29A"}
-                _hover={{
-                  bgColor: "#81B29A",
-                }}
-              >
-                Details
-              </Button>
-            </Link>
-          </Box> */}
           {showDeletedProduct()}
         </Flex>
       </Box>

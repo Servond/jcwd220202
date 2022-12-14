@@ -211,7 +211,7 @@ const ProductCardAdmin = ({
                 overflow={"hidden"}
                 textOverflow={"ellipsis"}
                 whiteSpace={"nowrap"}
-                maxWidth={"140px"}
+                maxWidth={"130px"}
               >
                 {product_name || "Batagor ori asli 100%"}
               </Text>
@@ -223,7 +223,7 @@ const ProductCardAdmin = ({
                 overflow={"hidden"}
                 textOverflow={"ellipsis"}
                 whiteSpace={"nowrap"}
-                maxWidth={"140px"}
+                maxWidth={"130px"}
               >
                 {CategoryId || "Snacks"}
               </Text>
@@ -236,7 +236,7 @@ const ProductCardAdmin = ({
               <Button
                 borderRadius={"10px"}
                 my={"70px"}
-                marginRight={"5px"}
+                marginRight={"10px"}
                 bgColor={"#81B29A"}
                 _hover={{
                   bgColor: "#81B29A",

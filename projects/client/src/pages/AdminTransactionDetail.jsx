@@ -2,68 +2,288 @@ import {
   Badge,
   Box,
   Button,
-  Flex,
   FormControl,
+  FormErrorMessage,
+  FormLabel,
   Grid,
   GridItem,
   Image,
-  Input,
-  InputGroup,
-  InputRightElement,
-  StackDivider,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Text,
+  Textarea,
+  useDisclosure,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
-import searchIcon from "../assets/search.png";
-import filterIcon from "../assets/funnel.png";
-import sortIcon from "../assets/sort.png";
-import Select from "react-select";
-import ReactPaginate from "react-paginate";
-import AdminNavbar from "../components/AdminNavbar";
+
 import TransactionListBar from "../components/TransactionListBar";
-import TransactionCardAdmin from "../components/TransactionCardAdmin";
-import uploadProduct from "../assets/product_upload.png";
+import { useState } from "react";
+import { axiosInstance } from "../api";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import Select from "react-select";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const AdminTransactionDetail = () => {
+  const [transactionDetail, setTransactionDetail] = useState({});
+  const [transactionItem, setTransactionItem] = useState([]);
+
+  const params = useParams();
+  const toast = useToast();
+  const {
+    isOpen: isOpenStatus,
+    onOpen: onOpenStatus,
+    onClose: onCloseStatus,
+  } = useDisclosure();
+  const navigate = useNavigate();
+
+  const optionsStatus = [
+    { value: "Waiting For Payment", label: "Waiting For Payment" },
+    { value: "Payment Approved", label: "Payment Approved" },
+    { value: "Product In Shipment", label: "Product In Shipment" },
+    { value: "Success", label: "Success" },
+    { value: "Cancel", label: "Cancel" },
+  ];
+
+  const openChangeStatusModal = () => {
+    onOpenStatus();
+
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeChangeStatusModal = () => {
+    onCloseStatus();
+
+    document.body.style.overflow = "unset";
+  };
+
   const colourStyles = {
     control: (base) => ({
       ...base,
       height: "40px",
-      width: "90px",
-      color: "red",
-      backgroundColor: "none",
-      border: "none",
-      boxShadow: "none",
-      paddingRight: "15px",
-    }),
-    dropdownIndicator: (base) => ({
-      ...base,
-      color: "black",
-      display: "none",
-    }),
-    indicatorSeparator: (base) => ({
-      ...base,
-      display: "none",
+      maxWidth: "400px",
     }),
     menu: (base) => ({
       ...base,
-      fontFamily: "roboto",
-      fontSize: "14px",
-      width: "150px",
+      maxWidth: "400px",
       color: "black",
       zIndex: 3,
     }),
-    placeholder: (defaultStyles) => {
-      return {
-        ...defaultStyles,
-        color: "black",
-        fontWeight: "bold",
-        fontSize: "15px",
-        fontFamily: "roboto",
-        paddingLeft: "5px",
-      };
-    },
   };
+
+  const fetchTransactionDetail = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `/admin-transaction/${params.id}`
+      );
+
+      setTransactionDetail(response.data.data);
+      setTransactionItem(response.data.data.TransactionItems);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      transaction_status: "",
+      note_to_customer: "",
+    },
+    onSubmit: async ({ transaction_status, note_to_customer }) => {
+      if (transaction_status == "Cancel" && note_to_customer) {
+        try {
+          await axiosInstance.patch(`/admin-transaction/status/${params.id}`, {
+            transaction_status: transaction_status,
+            note_to_customer: note_to_customer,
+          });
+
+          fetchTransactionDetail();
+          closeChangeStatusModal();
+
+          toast({
+            title: "Transaction Status Updated",
+            status: "info",
+          });
+        } catch (error) {
+          console.log(error);
+        }
+        return;
+      }
+
+      if (transaction_status == "Cancel" && !note_to_customer) {
+        formik.setFieldError("note_to_customer", "Note wajib diisi");
+      }
+
+      if (transaction_status != "Cancel") {
+        try {
+          await axiosInstance.patch(`/admin-transaction/status/${params.id}`, {
+            transaction_status: transaction_status,
+            note_to_customer: note_to_customer,
+          });
+
+          fetchTransactionDetail();
+          closeChangeStatusModal();
+
+          toast({
+            title: "Transaction Status Updated",
+            status: "info",
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    },
+    validationSchema: Yup.object().shape(
+      {
+        transaction_status: Yup.mixed()
+          .nullable()
+          .required("Transaction status is a required field"),
+        note_to_customer: Yup.string().when("transaction_status", (val) => {
+          if (formik.values.transaction_status == "Cancel") {
+            return Yup.string().required("Cancelation needs note to customer");
+          } else {
+            return Yup.string().notRequired();
+          }
+        }),
+      },
+      [
+        ["transaction_status", "transaction_status"],
+        ["note_to_customer", "note_to_customer"],
+      ]
+    ),
+    validateOnChange: false,
+  });
+
+  const formChangeHandler = ({ target }) => {
+    const { name, value } = target;
+    formik.setFieldValue(name, value);
+  };
+
+  const totalPrice = () => {
+    let sumPrice = 0;
+
+    for (let i = 0; i < transactionItem.length; i++) {
+      sumPrice = sumPrice + transactionItem[i].price_per_product;
+    }
+
+    return sumPrice;
+  };
+
+  const totalDiscount = () => {
+    let discount = 0;
+
+    for (let i = 0; i < transactionItem.length; i++) {
+      discount = discount + transactionItem[i].applied_discount;
+    }
+
+    return discount;
+  };
+
+  const showReferralVoucher = () => {
+    if (transactionDetail.ReferralVoucherId === null) {
+      return (
+        <Text fontWeight={"normal"} ml={"5px"}>
+          {"-"}
+        </Text>
+      );
+    }
+
+    if (transactionDetail.ReferralVoucherId !== null) {
+      return <Text fontWeight={"normal"}>{"Referral Voucher Used"}</Text>;
+    }
+  };
+
+  const showVoucher = () => {
+    if (transactionDetail.VoucherId === null) {
+      return (
+        <Text fontWeight={"normal"} ml={"5px"}>
+          {"-"}
+        </Text>
+      );
+    }
+
+    if (transactionDetail.VoucherId !== null) {
+      return <Text fontWeight={"normal"}>{"Grocerin Voucher Used"}</Text>;
+    }
+  };
+
+  const finalVoucher = () => {
+    if (
+      transactionDetail.VoucherId === null &&
+      transactionDetail.ReferralVoucherId === null
+    ) {
+      return <Text textAlign={"center"}>{"-"}</Text>;
+    } else {
+      return <Text>It used voucher</Text>;
+    }
+  };
+
+  const formatRupiah = (value) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(value);
+  };
+
+  const truncate = (string, length) => {
+    if (string.length > length) return string.substring(0, length) + "...";
+    else return string;
+  };
+
+  const renderItemTransaction = () => {
+    return transactionItem.map((val) => {
+      const countDiscount =
+        (val.current_price - val.applied_discount) * val.quantity;
+
+      return (
+        <Box display={"flex"} mt={"10px"} key={val.id.toString()}>
+          <Image
+            src={val.ProductBranch?.Product?.product_image || "Loading..."}
+            alt="search"
+            objectFit={"contain"}
+            height={"100px"}
+            maxW={"300px"}
+            border={"2px solid #E07A5F"}
+            borderRadius={"10px"}
+          />
+          <Box mt={"15px"} ml={"10px"}>
+            <Text fontWeight={"bold"}>
+              {truncate(val.ProductBranch?.Product?.product_name, 30) ||
+                "Loading..."}
+            </Text>
+            <Box display={"flex"}>
+              <Text>{`${val.quantity}x` || "Loading..."}</Text>
+              {val.applied_discount ? (
+                <>
+                  <Text ml={"5px"} textDecoration={"line-through"}>
+                    {formatRupiah(val.price_per_product) || "Loading..."}
+                  </Text>
+                  <Text ml={"5px"}>
+                    {formatRupiah(countDiscount) || "Loading..."}
+                  </Text>
+                </>
+              ) : (
+                <Text ml={"5px"}>
+                  {formatRupiah(val.price_per_product) || "Loading..."}
+                </Text>
+              )}
+            </Box>
+          </Box>
+        </Box>
+      );
+    });
+  };
+
+  useEffect(() => {
+    fetchTransactionDetail();
+  }, []);
 
   return (
     <Box
@@ -71,17 +291,34 @@ const AdminTransactionDetail = () => {
       height={"100vh"}
       fontFamily={"roboto"}
       fontSize={"16px"}
-      overflow={"scroll"}
-      pb={"120px"}
+      overflowY={"scroll"}
+      pb={"80px"}
     >
       <Box pt={"100px"}>
         <Grid templateRows="repeat(3, 1fr)">
           <GridItem ml={"15px"} maxHeight={"50px"}>
             <Grid templateColumns="repeat(2, 1fr)" gap={3}>
               <GridItem w="100%" mt={"5px"}>
-                <Badge colorScheme={"red"} fontStyle={"none"} fontSize={"14px"}>
-                  Waiting For Review
-                </Badge>
+                {transactionDetail.transaction_status === "Payment Approved" ||
+                transactionDetail.transaction_status ===
+                  "Product In Shipment" ||
+                transactionDetail.transaction_status === "Success" ? (
+                  <Badge
+                    colorScheme={"green"}
+                    fontStyle={"none"}
+                    fontSize={"14px"}
+                  >
+                    {transactionDetail?.transaction_status || "Loading..."}
+                  </Badge>
+                ) : (
+                  <Badge
+                    colorScheme={"red"}
+                    fontStyle={"none"}
+                    fontSize={"14px"}
+                  >
+                    {transactionDetail?.transaction_status || "Loading..."}
+                  </Badge>
+                )}
               </GridItem>
               <GridItem w="100%" textAlign={"center"}>
                 <Button
@@ -89,6 +326,7 @@ const AdminTransactionDetail = () => {
                   width={"130px"}
                   bgColor={"#81B29A"}
                   _hover={{ bgColor: "#81B29A" }}
+                  onClick={openChangeStatusModal}
                 >
                   Change Status
                 </Button>
@@ -96,32 +334,27 @@ const AdminTransactionDetail = () => {
             </Grid>
             <Grid templateColumns="repeat(2, 1fr)" gap={3} mt={"5px"}>
               <GridItem w="100%" mt={"8px"} fontWeight={"bold"}>
-                12345678
+                {transactionDetail?.id || "Loading..."}
               </GridItem>
               <GridItem w="100%" textAlign={"center"}>
-                <Button
-                  height={"40px"}
-                  width={"130px"}
-                  bgColor={"#81B29A"}
-                  _hover={{ bgColor: "#81B29A" }}
-                >
-                  See Invoice
-                </Button>
+                {/* <Link to={"http://localhost:8000/public/1669690582575.jpeg"}> */}
+                <a href={transactionDetail.payment_proof_img} target="_blank">
+                  <Button
+                    height={"40px"}
+                    bgColor={"#81B29A"}
+                    _hover={{ bgColor: "#81B29A" }}
+                    width={"130px"}
+                    color={"black"}
+                  >
+                    Payment Proof
+                  </Button>
+                </a>
+                {/* </Link> */}
               </GridItem>
             </Grid>
             <Grid templateColumns="repeat(2, 1fr)" gap={3} mt={"5px"}>
               <GridItem mt={"8px"} fontWeight={"bold"}>
-                22-12-2022
-              </GridItem>
-              <GridItem textAlign={"center"}>
-                <Button
-                  height={"40px"}
-                  bgColor={"#81B29A"}
-                  _hover={{ bgColor: "#81B29A" }}
-                  width={"130px"}
-                >
-                  Payment Proof
-                </Button>
+                {transactionDetail?.createdAt?.split("T")[0] || "Loading..."}
               </GridItem>
             </Grid>
           </GridItem>
@@ -138,62 +371,45 @@ const AdminTransactionDetail = () => {
               Detail Product
             </Text>
             <Text fontWeight={"bold"} mt={"10px"}>
-              Username
+              {transactionDetail?.User?.username || "Loading..."}
             </Text>
           </Box>
           <Box
-            h="auto"
-            // bg="tomato"
-            display={"flex"}
+            bgColor={"#F4F1DE"}
+            borderRadius={"10px"}
+            border={"2px solid #E07A5F"}
+            py={"8px"}
+            mt={"8px"}
+            overflowY={"scroll"}
+            maxWidth={"450px"}
+            height={"250px"}
+            padding={"10px"}
           >
-            <Image
-              src={uploadProduct}
-              alt="search"
-              objectFit={"contain"}
-              height={"100px"}
-              maxW={"300px"}
-            />
-            <Box mt={"15px"}>
-              <Text fontWeight={"bold"}>Judul Produk</Text>
-              <Text>1x Rp. 80.000</Text>
-            </Box>
-          </Box>
-          <Box
-            h="auto"
-            // bg="tomato"
-            display={"flex"}
-          >
-            <Image
-              src={uploadProduct}
-              alt="search"
-              objectFit={"contain"}
-              height={"100px"}
-              maxW={"300px"}
-            />
-            <Box mt={"15px"}>
-              <Text fontWeight={"bold"}>Judul Produk</Text>
-              <Text>1x Rp. 80.000</Text>
-            </Box>
-          </Box>
-          <Box
-            h="auto"
-            // bg="tomato"
-            display={"flex"}
-          >
-            <Image
-              src={uploadProduct}
-              alt="search"
-              objectFit={"contain"}
-              height={"100px"}
-              maxW={"300px"}
-            />
-            <Box mt={"15px"}>
-              <Text fontWeight={"bold"}>Judul Produk</Text>
-              <Text>1x Rp. 80.000</Text>
-            </Box>
+            {renderItemTransaction()}
           </Box>
         </VStack>
-        <VStack spacing={4} align="stretch" px={"15px"}>
+        <VStack spacing={4} align="stretch" px={"15px"} mt={"20px"}>
+          <Box h="auto">
+            <Text
+              fontSize={"18px"}
+              fontWeight={"bold"}
+              bgColor={"#81B29A"}
+              borderRadius={"5px"}
+              pl={"15px"}
+            >
+              Voucher Used
+            </Text>
+          </Box>
+          <Box>
+            <Text fontWeight={"bold"}>Referral Voucher:</Text>
+            {showReferralVoucher()}
+            <Text fontWeight={"bold"} mt={"5px"}>
+              Grocerin Voucher:
+            </Text>
+            {showVoucher()}
+          </Box>
+        </VStack>
+        <VStack spacing={4} align="stretch" px={"15px"} mt={"20px"}>
           <Box h="auto">
             <Text
               fontSize={"18px"}
@@ -206,12 +422,15 @@ const AdminTransactionDetail = () => {
             </Text>
           </Box>
           <Box>
-            <Text fontWeight={"bold"}>
-              Address: <Text fontWeight={"normal"}>Jl. in aja dulu</Text>
+            <Text fontWeight={"bold"}>Address:</Text>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.User?.Addresses[0].address || "Loading"}
             </Text>
             <Text fontWeight={"bold"} mt={"5px"}>
-              Shipping Method:{" "}
-              <Text fontWeight={"normal"}>{"Yakin Esok Sampai (YES)"}</Text>
+              Shipping Method:
+            </Text>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.shipping_method || "Loading..."}
             </Text>
           </Box>
         </VStack>
@@ -239,29 +458,164 @@ const AdminTransactionDetail = () => {
             justifyContent={"space-between"}
             pt={"20px"}
           >
-            <Text>Total Price:</Text>
-            <Text>Rp. 2.000.000</Text>
+            <Text>Total Price :</Text>
+            <Text>{formatRupiah(totalPrice()) || "Loading..."}</Text>
           </Box>
           <Box h="auto" display={"flex"} justifyContent={"space-between"}>
-            <Text>Shipment Price:</Text>
-            <Text>Rp. 2.000.000</Text>
+            <Text>Shipment Price :</Text>
+            <Text>
+              {transactionDetail.shipment_price
+                ? formatRupiah(transactionDetail?.shipment_price)
+                : "Loading..."}
+            </Text>
           </Box>
           <Box h="auto" display={"flex"} justifyContent={"space-between"}>
-            <Text>Discount Price:</Text>
-            <Text>Rp. 2.000.000</Text>
+            <Text>Discount :</Text>
+            <Text>- {formatRupiah(totalDiscount()) || "Loading..."}</Text>
           </Box>
           <Box h="auto" display={"flex"} justifyContent={"space-between"}>
-            <Text>Sub Total Price:</Text>
-            <Text>Rp. 2.000.000</Text>
+            <Text>Voucher :</Text>
+            {finalVoucher()}
+          </Box>
+          <Box h="auto" display={"flex"} justifyContent={"space-between"}>
+            <Text>Grand Total Price :</Text>
+            <Text>
+              {transactionDetail.total_price
+                ? formatRupiah(transactionDetail?.total_price)
+                : "Loading..."}
+            </Text>
           </Box>
         </VStack>
       </Box>
       <Box>
         <TransactionListBar />
       </Box>
-      <Box>
-        <AdminNavbar />
-      </Box>
+
+      {/* modal for change status */}
+
+      <Modal isOpen={isOpenStatus} onClose={closeChangeStatusModal}>
+        <ModalOverlay />
+        <ModalContent
+          mt={"20vh"}
+          fontFamily={"roboto"}
+          fontSize={"16px"}
+          bgColor={"#F4F1DE"}
+        >
+          <ModalHeader
+            fontSize={"16px"}
+            fontWeight="bold"
+            mt={"10px"}
+            textAlign={"center"}
+          >
+            Change Transaction Status
+          </ModalHeader>
+          <ModalBody>
+            <Box>
+              <Text fontWeight={"bold"}>Currrent Transaction Status:</Text>
+              {transactionDetail.transaction_status === "Payment Approved" ||
+              transactionDetail.transaction_status === "Product In Shipment" ||
+              transactionDetail.transaction_status === "Success" ? (
+                <Badge
+                  colorScheme={"green"}
+                  fontStyle={"none"}
+                  fontSize={"14px"}
+                  mt={"10px"}
+                >
+                  {transactionDetail?.transaction_status || "Loading..."}
+                </Badge>
+              ) : (
+                <Badge
+                  colorScheme={"red"}
+                  fontStyle={"none"}
+                  fontSize={"14px"}
+                  mt={"10px"}
+                >
+                  {transactionDetail?.transaction_status || "Loading..."}
+                </Badge>
+              )}
+            </Box>
+            <FormControl
+              mt={"10px"}
+              isInvalid={formik.errors.transaction_status}
+            >
+              <FormLabel fontWeight={"bold"}>Transaction Status:</FormLabel>
+              <Select
+                value={
+                  formik.values.transaction_status
+                    ? {
+                        label: formik.values.transaction_status,
+                        value: formik.values.transaction_status,
+                      }
+                    : { label: "Select Transaction Status", value: "" }
+                }
+                options={optionsStatus}
+                styles={colourStyles}
+                name="transaction_status"
+                onChange={(event) => {
+                  console.log(event.value);
+                  formik.setFieldValue("transaction_status", event.value);
+                }}
+                placeholder={"Select transaction status"}
+              />
+              <FormErrorMessage>
+                {formik.errors.transaction_status}
+              </FormErrorMessage>
+            </FormControl>
+
+            {formik.values.transaction_status === "Cancel" ? (
+              <FormControl
+                mt={"5px"}
+                isInvalid={formik.errors.note_to_customer}
+              >
+                <FormLabel fontWeight={"bold"}>Note:</FormLabel>
+                <Textarea
+                  placeholder="Write note to customer"
+                  bgColor={"white"}
+                  overflowY={"scroll"}
+                  name="note_to_customer"
+                  maxWidth={"400px"}
+                  value={formik.values.note_to_customer}
+                  onChange={formChangeHandler}
+                  height={"90px"}
+                />
+                <FormErrorMessage>
+                  {formik.errors.note_to_customer}
+                </FormErrorMessage>
+              </FormControl>
+            ) : null}
+          </ModalBody>
+
+          <ModalFooter display={"contents"}>
+            <Button
+              onClick={closeChangeStatusModal}
+              mx={"30px"}
+              mt={"10px"}
+              borderRadius={"15px"}
+              bgColor={"#E07A5F"}
+              color={"white"}
+              _hover={{
+                bgColor: "red.500",
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              colorScheme="red"
+              onClick={formik.handleSubmit}
+              mx={"30px"}
+              mt={"10px"}
+              mb={"40px"}
+              borderRadius={"15px"}
+              bgColor={"#81B29A"}
+              _hover={{
+                bgColor: "green.500",
+              }}
+            >
+              Submit
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

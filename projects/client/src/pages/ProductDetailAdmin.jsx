@@ -28,7 +28,6 @@ import {
 import ProductListBar from "../components/ProductListBar";
 import uploadProduct from "../assets/product_upload.png";
 import { useState } from "react";
-import Select from "react-select";
 import { axiosInstance } from "../api";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
@@ -133,8 +132,8 @@ const ProductDetailAdmin = () => {
       return (
         <Box
           bgColor={"white"}
+          border={"1px solid #E07A5F"}
           borderRadius={"5px"}
-          border={"1px solid lightgrey"}
           height={"40px"}
           py={"8px"}
           mt={"8px"}
@@ -146,8 +145,8 @@ const ProductDetailAdmin = () => {
       return (
         <Box
           bgColor={"white"}
+          border={"1px solid #E07A5F"}
           borderRadius={"5px"}
-          border={"1px solid lightgrey"}
           height={"40px"}
           py={"8px"}
           mt={"8px"}
@@ -162,8 +161,8 @@ const ProductDetailAdmin = () => {
       return (
         <Box
           bgColor={"white"}
+          border={"1px solid #E07A5F"}
           borderRadius={"5px"}
-          border={"1px solid lightgrey"}
           height={"40px"}
           py={"8px"}
           mt={"8px"}
@@ -178,8 +177,8 @@ const ProductDetailAdmin = () => {
       return (
         <Box
           bgColor={"white"}
+          border={"1px solid #E07A5F"}
           borderRadius={"5px"}
-          border={"1px solid lightgrey"}
           height={"40px"}
           py={"8px"}
           mt={"8px"}
@@ -195,8 +194,8 @@ const ProductDetailAdmin = () => {
       return (
         <Box
           bgColor={"white"}
+          border={"1px solid #E07A5F"}
           borderRadius={"5px"}
-          border={"1px solid lightgrey"}
           height={"40px"}
           py={"8px"}
           mt={"8px"}
@@ -208,8 +207,8 @@ const ProductDetailAdmin = () => {
       return (
         <Box
           bgColor={"white"}
+          border={"1px solid #E07A5F"}
           borderRadius={"5px"}
-          border={"1px solid lightgrey"}
           height={"40px"}
           py={"8px"}
           mt={"8px"}
@@ -498,17 +497,19 @@ const ProductDetailAdmin = () => {
                 objectFit={"contain"}
                 height={"100%"}
                 maxW={"300px"}
+                border={"2px solid #E07A5F"}
+                borderRadius={"10px"}
               />
             </Box>
             <Box px={"30px"}>
               <Box fontWeight={"bold"}>Product Name:</Box>
               <Box
                 bgColor={"white"}
-                borderRadius={"5px"}
-                border={"1px solid lightgrey"}
                 height={"40px"}
                 py={"8px"}
                 mt={"8px"}
+                border={"1px solid #E07A5F"}
+                borderRadius={"5px"}
               >
                 <Text
                   ml={"16px"}
@@ -525,12 +526,12 @@ const ProductDetailAdmin = () => {
               </Box>
               <Box
                 bgColor={"white"}
-                borderRadius={"5px"}
-                border={"1px solid lightgrey"}
                 height={"40px"}
                 py={"8px"}
                 mt={"8px"}
                 display={"flex"}
+                border={"1px solid #E07A5F"}
+                borderRadius={"5px"}
               >
                 <Text ml={"16px"}>
                   {productDetail.product_price
@@ -543,11 +544,11 @@ const ProductDetailAdmin = () => {
               </Box>
               <Box
                 bgColor={"white"}
-                borderRadius={"5px"}
-                border={"1px solid lightgrey"}
                 height={"40px"}
                 py={"8px"}
                 mt={"8px"}
+                border={"1px solid #E07A5F"}
+                borderRadius={"5px"}
               >
                 <Text ml={"16px"}>
                   {productDetail?.Category?.category_name || "Loading..."}
@@ -558,13 +559,13 @@ const ProductDetailAdmin = () => {
               </Box>
               <Box
                 bgColor={"white"}
-                borderRadius={"5px"}
-                border={"1px solid lightgrey"}
                 height={"120px"}
                 py={"8px"}
                 mt={"8px"}
-                overflow={"scroll"}
+                overflowY={"scroll"}
                 maxWidth={"420px"}
+                border={"1px solid #E07A5F"}
+                borderRadius={"5px"}
               >
                 <Text mx={"16px"}>
                   {productDetail?.product_description || "Loading..."}

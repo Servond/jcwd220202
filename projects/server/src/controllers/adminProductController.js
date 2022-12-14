@@ -474,6 +474,12 @@ const adminProductController = {
         },
       });
 
+      if (stock === findProductWillUpdated.stock) {
+        return res.status(200).json({
+          message: "product updated but not including the history",
+        });
+      }
+
       const stock_movement = stock - findProductWillUpdated.stock;
 
       await db.ProductHistory.create({

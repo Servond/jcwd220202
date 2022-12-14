@@ -29,6 +29,7 @@ import AdminTransaction from "./pages/AdminTransaction";
 import AdminTransactionDetail from "./pages/AdminTransactionDetail";
 import AdminProductMutation from "./pages/AdminProductMutation";
 import grocerinLogo from "./assets/GROCERIN.png";
+import "./style/index.css";
 
 const App = () => {
   const authSelector = useSelector((state) => state.auth);

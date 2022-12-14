@@ -8,8 +8,6 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import uploadProduct from "../assets/product_upload.png";
 
@@ -22,13 +20,37 @@ const TransactionCardAdmin = ({
   transaction_status,
 }) => {
   const showFirstItem = TransactionItems.map((val) => {
+    const countDiscount =
+      (val.current_price - val.applied_discount) * val.quantity;
+
     return {
+      applied_discount: val.applied_discount,
       product_name: val.ProductBranch.Product.product_name,
       quantity: val.quantity,
       price_per_product: val.price_per_product,
       product_image: val.ProductBranch.Product.product_image,
+      discounted_product: countDiscount,
     };
   });
+
+  const showDiscount = () => {
+    if (showFirstItem[0].applied_discount) {
+      return (
+        <>
+          <Text ml={"5px"} textDecoration={"line-through"}>
+            {formatRupiah(showFirstItem[0].price_per_product) || "Loading..."}
+          </Text>
+          <Text ml={"5px"}>
+            {formatRupiah(showFirstItem[0].discounted_product) || "Loading..."}
+          </Text>
+        </>
+      );
+    } else {
+      <Text ml={"5px"}>
+        {formatRupiah(showFirstItem[0].price_per_product) || "Loading..."}
+      </Text>;
+    }
+  };
 
   const formatRupiah = (value) => {
     return new Intl.NumberFormat("id-ID", {
@@ -85,20 +107,36 @@ const TransactionCardAdmin = ({
             </Box>
             <Box>{createdAt.split("T")[0] || "Loading..."}</Box>
             <Box>
-              <Badge
-                colorScheme={"red"}
-                fontStyle={"none"}
-                fontSize={"10px"}
-                maxWidth={"160px"}
-                overflow={"hidden"}
-                textOverflow={"ellipsis"}
-                whiteSpace={"nowrap"}
-              >
-                {transaction_status || "Loading..."}
-              </Badge>
+              {transaction_status === "Payment Approved" ||
+              transaction_status === "Product In Shipment" ||
+              transaction_status === "Success" ? (
+                <Badge
+                  colorScheme={"green"}
+                  fontStyle={"none"}
+                  fontSize={"12px"}
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  whiteSpace={"nowrap"}
+                  maxWidth={"150px"}
+                >
+                  {transaction_status || "Loading..."}
+                </Badge>
+              ) : (
+                <Badge
+                  colorScheme={"red"}
+                  fontStyle={"none"}
+                  fontSize={"12px"}
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  whiteSpace={"nowrap"}
+                  maxWidth={"150px"}
+                >
+                  {transaction_status || "Loading..."}
+                </Badge>
+              )}
             </Box>
             <Box mt={"5px"}>
-              <Link to={"/admin/transaction/:id"}>
+              <Link to={`/admin/transaction/${TransactionId}`}>
                 <Button
                   width={"100px"}
                   bgColor={"#81B29A"}
@@ -116,8 +154,10 @@ const TransactionCardAdmin = ({
                 src={showFirstItem[0].product_image || uploadProduct}
                 alt="search"
                 objectFit={"contain"}
-                height={"80px"}
+                height={"70px"}
                 maxW={"300px"}
+                border={"2px solid #E07A5F"}
+                borderRadius={"10px"}
               />
             </Box>
             <Box
@@ -131,10 +171,7 @@ const TransactionCardAdmin = ({
             </Box>
             <Box display={"flex"}>
               <Text>{`${showFirstItem[0].quantity}x` || "Loading..."}</Text>
-              <Text ml={"5px"}>
-                {formatRupiah(showFirstItem[0].price_per_product) ||
-                  "Loading..."}
-              </Text>
+              <Box display={"grid"}>{showDiscount()}</Box>
             </Box>
             <Box
               overflow={"hidden"}

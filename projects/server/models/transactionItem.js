@@ -22,6 +22,12 @@ module.exports = (sequelize, DataTypes) => {
       price_per_product: {
         type: DataTypes.INTEGER,
       },
+      applied_discount: {
+        type: DataTypes.INTEGER,
+      },
+      current_price: {
+        type: DataTypes.INTEGER,
+      },
     },
     {
       sequelize,

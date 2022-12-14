@@ -33,7 +33,7 @@ const maxItemsPerPage = 12;
 const AdminProductMutation = () => {
   const [productHistory, setProductHistory] = useState([]);
   const [sortBy, setSortBy] = useState("createdAt");
-  const [sortDir, setSortDir] = useState("ASC");
+  const [sortDir, setSortDir] = useState("DESC");
   const [currentSearch, setCurrentSearch] = useState("");
   const [totalProductHistory, setTotalProductHistory] = useState(0);
   const [activePage, setActivePage] = useState(1);
@@ -41,8 +41,8 @@ const AdminProductMutation = () => {
   const [endDate, setEndDate] = useState(null);
 
   const optionsSort = [
-    { value: "createdAt ASC", label: "Latest" },
-    { value: "createdAt DESC", label: "Oldest" },
+    { value: "createdAt DESC", label: "Latest" },
+    { value: "createdAt ASC", label: "Oldest" },
   ];
 
   const fetchProduHistory = async () => {
@@ -66,6 +66,8 @@ const AdminProductMutation = () => {
       console.log(error);
     }
   };
+
+  console.log(productHistory);
 
   const maxPage = Math.ceil(totalProductHistory / maxItemsPerPage);
 
@@ -147,6 +149,7 @@ const AdminProductMutation = () => {
           stock_movement={val.stock_movement}
           initial_stock={val.initial_stock}
           current_stock={val.current_stock}
+          ProductId={val.ProductId}
         />
       );
     });
