@@ -7,7 +7,7 @@ const { uploader } = require("../../lib/uploader");
 router.post("/addcart", verifyToken, transactionController.addToCart);
 router.get("/cart", verifyToken, transactionController.showUserCart);
 router.post("/checkout", verifyToken, transactionController.checkoutItems);
-router.patch("/:id", verifyToken, transactionController.updateQuantity);
+// router.patch("/:id", verifyToken, transactionController.updateQuantity);
 router.delete("/:id", verifyToken, transactionController.deleteItem);
 
 // router.post("/", transactionController.createPayment)
@@ -19,5 +19,15 @@ router.delete("/:id", verifyToken, transactionController.deleteItem);
 //     }).single("payment_proof_img"),
 //     transactionController.updatePayment
 // )
+
+router.patch(
+    "/:id",
+    uploader({
+        acceptedFileTypes: ["png", "jpg"],
+        filePrefix: "PROF",
+    }).single("payment_proof_img"),
+    transactionController.updatePayment
+);
+router.get("/:id", transactionController.getTransactionData);
 
 module.exports = router;

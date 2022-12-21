@@ -68,6 +68,10 @@ const Home = () => {
     };
   });
 
+  useEffect(() => {
+    fetchCategory();
+}, []);
+
   const colourStyles = {
     control: (base) => ({
       ...base,
@@ -228,7 +232,7 @@ const Home = () => {
                                     {item.category_name}
                                 </Text>
                             </Box>
-                        )
+                        );
                     })}
                     <Link to={"/category"}>
                         <Box display={"grid"}>
@@ -264,7 +268,7 @@ const Home = () => {
                                     {item.category_name}
                                 </Text>
                             </Box>
-                        )
+                        );
                     })}
                     <Link to={"/category"}>
                         <Box display={"grid"}>

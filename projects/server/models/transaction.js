@@ -30,6 +30,9 @@ module.exports = (sequelize, DataTypes) => {
       payment_proof_img: {
         type: DataTypes.STRING,
       },
+      expired_date: {
+        type: DataTypes.DATE,
+      },
       transaction_status: {
         type: DataTypes.STRING,
       },
