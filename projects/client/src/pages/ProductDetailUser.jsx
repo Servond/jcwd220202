@@ -43,15 +43,15 @@ const ProductDetailUser = () => {
     try {
       let productToAdd = {
         ProductBranchId: productStock.id,
-        quantity: 1,
-        total_product_price: productDetails.product_price,
+        quantity: 2,
+        current_price: productDetails.product_price,
       };
       await axiosInstance.post("/transaction/addcart", productToAdd);
       console.log(productToAdd);
       toast({ title: "Add product to cart", status: "success" });
     } catch (err) {
       console.log(err);
-      toast({ title: "Product already been added", status: "error" });
+      toast({ title: "Server error", status: "error" });
     }
   };
 

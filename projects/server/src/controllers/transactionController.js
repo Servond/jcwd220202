@@ -3,7 +3,8 @@ const db = require("../../models");
 
 const transactionController = {
   addToCart: async (req, res) => {
-    const { ProductBranchId, quantity, total_product_price } = req.body;
+    const { ProductBranchId, quantity, total_product_price, current_price } =
+      req.body;
 
     try {
       const conditionDouble = await db.Cart.findOne({
@@ -23,38 +24,14 @@ const transactionController = {
           UserId: req.user.id,
           ProductBranchId,
           quantity,
-          total_product_price,
+          current_price: current_price,
+          total_product_price: current_price * quantity,
         });
-
         return res.status(200).json({
           message: "Added to cart",
           data: addProduct,
         });
       }
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        message: "Server error",
-      });
-    }
-  },
-  showUserCart: async (req, res) => {
-    const { ProductBranchId, quantity, total_product_price } = req.body;
-
-    try {
-      const userCart = await db.Cart.findAll({
-        where: {
-          UserId: req.user.id,
-        },
-        include: [
-          { model: db.ProductBranch, include: [{ model: db.Product }] },
-        ],
-      });
-
-      return res.status(200).json({
-        message: "Showing user cart",
-        data: userCart,
-      });
     } catch (err) {
       console.log(err);
       return res.status(500).json({
@@ -92,23 +69,32 @@ const transactionController = {
         where: {
           UserId: req.user.id,
         },
+        include: [{ model: db.ProductBranch }],
       });
       // console.log(currentCart.id);
-      // console.log(JSON.parse(JSON.stringify()))
+      console.log(JSON.parse(JSON.stringify(currentCart)));
+
+      const totalBayar = currentCart.quantity * currentCart.current_price;
+
       const createTransaction = await db.Transaction.create({
         BranchId: currentCart.BranchId,
-        total_price: 7777,
-        total_quantity: 888,
-        ProductBranchId: currentCart.ProductBranchId,
+        total_quantity: currentCart.quantity,
+        total_price: totalBayar,
+        UserId: req.user.id,
       });
+
       currentCart.map((val) => {
         db.TransactionItem.create({
           TransactionId: createTransaction.id,
           // applied_discount,
-          current_price: 99999,
           ProductBranchId: val.ProductBranchId,
+          quantity: val.quantity,
+          current_price: val.current_price,
+          price_per_product: val.current_price * val.quantity,
+          applied_discount: val.applied_discount,
         });
       });
+
       return res.status(200).json({
         message: "Product checked out",
       });
@@ -116,6 +102,42 @@ const transactionController = {
       console.log(err);
       return res.status(500).json({
         message: "Server error handling cart",
+      });
+    }
+  },
+  updateQuantity: async (req, res) => {
+    try {
+      const qtyqty = await db.Cart.update(
+        {
+          quantity: req.body.quantity,
+        },
+        { where: { id: req.params.id } }
+      );
+
+      return res.status(200).json({
+        message: "Product added",
+        data: qtyqty,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Failed to add product",
+      });
+    }
+  },
+  deleteItem: async (req, res) => {
+    try {
+      await db.Cart.destroy({
+        where: { id: req.params.id },
+      });
+
+      return res.status(200).json({
+        message: "Product deleted",
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Failed to delete product",
       });
     }
   },

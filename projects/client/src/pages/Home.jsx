@@ -32,6 +32,8 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import ProductCardAdmin from "../components/ProductCardAdmin";
 import ProductBox from "../components/ProductBox";
+import SearchBar from "../components/SearchBar";
+import Carousel from "../components/Banner";
 
 const Home = () => {
   const [keywordHandler, setKeywordHandler] = useState("");
@@ -198,83 +200,84 @@ const Home = () => {
   }, [sortBy, sortDir, filter, currentSearch]);
 
   return (
-    <Box bgColor={"#81B29A"}>
-      <Box pt={"10px"}>
-        <Flex display={"flex"}>
-          <FormControl>
-            <InputGroup size="md">
-              <InputRightElement
-                pointerEvents="none"
-                children={<SearchIcon color="F2CC8F" />}
-                size="md"
-                mr={"5"}
-                onClick={formik.handleSubmit}
-              />
-              <Input
-                name="search"
-                placeholder="Search Product"
-                _placeholder={{ color: "black.500" }}
-                value={formik.values.search}
-                onChange={formChangeHandler}
-                bgColor={"white"}
-                height={"40px"}
-                marginLeft={"6px"}
-              />
-            </InputGroup>
-          </FormControl>
-          <Box
-            p={"2"}
-            mr={"5"}
-            color="#E07A5F"
-            borderRadius="10px"
-            as="b"
-            _hover={{
-              background: "white",
-              color: "#E07A5F",
-              transition: "all 1000ms ease",
-              cursor: "pointer",
-            }}
-          >
-            <Link to="/login/user">Login</Link>
-          </Box>
-        </Flex>
-      </Box>
-      <Box h={"200px"} mt={"10px"} bgColor={"#F4F1DE"}>
-        <Image src={banner1} w={"100%"} h={"100%"} />
-      </Box>
-      <SimpleGrid
-        columns={"4"}
-        spacing={5}
-        textAlign={"center"}
-        alignItems={"center"}
-        bgColor={"white"}
-        p={"5"}
-        mt={"10px"}
-      >
-        {categories.slice(0, 7).map((item) => {
-          return (
-            <Box display={"grid"}>
-              <Image
-                justifySelf={"center"}
-                src={item.icon}
-                w={"50px"}
-                alignItems={"center"}
-              />
-              <Text fontSize={"xs"}>{item.category_name}</Text>F
+    <Box bgColor={"#81B29A"} mt={"20px"}>
+      <SearchBar />
+            <Box h={"200px"} bgColor={"#F4F1DE"}>
+                <Carousel />
             </Box>
-          );
-        })}
-        <Link to={"/category"}>
-          <Box display={"grid"}>
-            <Image
-              justifySelf={"center"}
-              src={other}
-              w={"40px"}
-              alignItems={"center"}
-            />
-          </Box>
-        </Link>
-      </SimpleGrid>
+            {category.length <= 8 ? (
+                <SimpleGrid
+                    columns={"4"}
+                    spacing={5}
+                    textAlign={"center"}
+                    alignItems={"center"}
+                    bgColor={"white"}
+                    p={"5"}
+                    mt={"10px"}
+                >
+                    {category.slice(0, 3).map((item) => {
+                        return (
+                            <Box display={"grid"}>
+                                <Image
+                                    justifySelf={"center"}
+                                    src={item.icon_url}
+                                    w={"50px"}
+                                    alignItems={"center"}
+                                />
+                                <Text fontSize={"xs"}>
+                                    {item.category_name}
+                                </Text>
+                            </Box>
+                        )
+                    })}
+                    <Link to={"/category"}>
+                        <Box display={"grid"}>
+                            <Image
+                                justifySelf={"center"}
+                                src={other}
+                                w={"40px"}
+                                alignItems={"center"}
+                            />
+                        </Box>
+                    </Link>
+                </SimpleGrid>
+            ) : (
+                <SimpleGrid
+                    columns={"4"}
+                    spacing={5}
+                    textAlign={"center"}
+                    alignItems={"center"}
+                    bgColor={"white"}
+                    p={"5"}
+                    mt={"10px"}
+                >
+                    {category.slice(0, 7).map((item) => {
+                        return (
+                            <Box display={"grid"}>
+                                <Image
+                                    justifySelf={"center"}
+                                    src={item.icon_url}
+                                    w={"50px"}
+                                    alignItems={"center"}
+                                />
+                                <Text fontSize={"xs"}>
+                                    {item.category_name}
+                                </Text>
+                            </Box>
+                        )
+                    })}
+                    <Link to={"/category"}>
+                        <Box display={"grid"}>
+                            <Image
+                                justifySelf={"center"}
+                                src={other}
+                                w={"40px"}
+                                alignItems={"center"}
+                            />
+                        </Box>
+                    </Link>
+                </SimpleGrid>
+            )}
       <Box
         bgColor={"#F4F1DE"}
         mt={"10px"}
