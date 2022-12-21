@@ -29,7 +29,10 @@ import AdminTransaction from "./pages/AdminTransaction";
 import AdminTransactionDetail from "./pages/AdminTransactionDetail";
 import AdminProductMutation from "./pages/AdminProductMutation";
 import grocerinLogo from "./assets/GROCERIN.png";
+import VoucherAdmin from "./pages/VoucherAdmin";
 import "./style/index.css";
+import AddVoucherAdmin from "./pages/AddVoucherAdmin";
+import CategoryEdit from "./pages/EditCategory";
 
 const App = () => {
   const authSelector = useSelector((state) => state.auth);
@@ -124,8 +127,9 @@ const App = () => {
           {/* <Route path="/address" element={<AddressPage />} /> */}
           <Route path="/register/user" element={<Register />} />
           <Route path="/product" element={<ProductPage />} />
-          <Route path="/admin/category" element={<AdminCategory />} />
-          <Route path="/add/category" element={<AddCategory />} />
+          <Route path="/super-admin/category" element={<AdminCategory />} />
+          <Route path="/super-admin/category/add" element={<AddCategory />} />
+          <Route path="/category/:id" element={<CategoryEdit />} />
           {/* {renderUserRoutes()} */}
           {/* {renderAdminRoutes()} */}
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -156,6 +160,8 @@ const App = () => {
             path="/admin/product-mutation"
             element={<AdminProductMutation />}
           />
+          <Route path="/admin/voucher" element={<VoucherAdmin />} />
+          <Route path="/admin/voucher/:url" element={<AddVoucherAdmin />} />
         </Routes>
       </Box>
     </>

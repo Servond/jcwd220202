@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       Branch.belongsTo(models.User);
       Branch.hasMany(models.ProductHistory);
       Branch.hasMany(models.Transaction);
+      Branch.hasMany(models.Voucher);
     }
   }
   Branch.init(

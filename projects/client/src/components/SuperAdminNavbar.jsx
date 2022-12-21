@@ -23,8 +23,8 @@ const SuperAdminNavbar = () => {
     },
     {
       icon: userLogo,
-      text: "User",
-      link: "/super-admin/user",
+      text: "Branch",
+      link: "/super-admin/branch",
     },
   ]);
 
