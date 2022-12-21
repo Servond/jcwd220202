@@ -29,12 +29,16 @@ import AdminTransaction from "./pages/AdminTransaction";
 import AdminTransactionDetail from "./pages/AdminTransactionDetail";
 import AdminProductMutation from "./pages/AdminProductMutation";
 import grocerinLogo from "./assets/GROCERIN.png";
+import VoucherAdmin from "./pages/VoucherAdmin";
 import "./style/index.css";
 import NotFound from "./pages/404Page";
-import CategoryEdit from "./pages/EditCategory";
 import CreateBranch from "./pages/CreateBranchSprAdmin";
 import UserSprAdmin from "./pages/UserSprAdmin";
 import Payment from "./pages/Payment";
+import CartUser from "./pages/CartPageUser";
+import OrderUser from "./pages/OrderUser";
+import AddVoucherAdmin from "./pages/AddVoucherAdmin";
+import CategoryEdit from "./pages/EditCategory";
 
 const App = () => {
     const authSelector = useSelector((state) => state.auth);
@@ -140,6 +144,7 @@ const App = () => {
                         path="/super-admin/category/add"
                         element={<AddCategory />}
                     />
+                    <Route path="/category/:id" element={<CategoryEdit />} />
                     {/* {renderUserRoutes()} */}
                     {/* {renderAdminRoutes()} */}
                     <Route
@@ -203,6 +208,13 @@ const App = () => {
                     <Route
                         path="/super-admin/branch"
                         element={<UserSprAdmin />}
+                    />
+                    <Route path="/user/cart" element={<CartUser />} />
+                    <Route path="/user/order" element={<OrderUser />} />
+                    <Route path="/admin/voucher" element={<VoucherAdmin />} />
+                    <Route
+                        path="/admin/voucher/:url"
+                        element={<AddVoucherAdmin />}
                     />
                     <Route path="/user/payment/:id" element={<Payment />} />
                 </Routes>
