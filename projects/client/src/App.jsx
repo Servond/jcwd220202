@@ -34,6 +34,7 @@ import NotFound from "./pages/404Page";
 import CategoryEdit from "./pages/EditCategory";
 import CreateBranch from "./pages/CreateBranchSprAdmin";
 import UserSprAdmin from "./pages/UserSprAdmin";
+import Payment from "./pages/Payment";
 
 const App = () => {
     const authSelector = useSelector((state) => state.auth);
@@ -190,17 +191,21 @@ const App = () => {
                         path="/admin/product-mutation"
                         element={<AdminProductMutation />}
                     />
+                    <Route path="/404" element={<NotFound />} />
+                    <Route
+                        path="/super-admin/category/:id"
+                        element={<CategoryEdit />}
+                    />
+                    <Route
+                        path="/super-admin/create-branch"
+                        element={<CreateBranch />}
+                    />
+                    <Route
+                        path="/super-admin/branch"
+                        element={<UserSprAdmin />}
+                    />
+                    <Route path="/user/payment/:id" element={<Payment />} />
                 </Routes>
-                <Route path="/404" element={<NotFound />} />
-                <Route
-                    path="/super-admin/category/:id"
-                    element={<CategoryEdit />}
-                />
-                <Route
-                    path="/super-admin/create-branch"
-                    element={<CreateBranch />}
-                />
-                <Route path="/super-admin/branch" element={<UserSprAdmin />} />
             </Box>
         </>
     );

@@ -1,56 +1,28 @@
-const { Op } = require("sequelize")
-const db = require("../../models")
+const { Op } = require("sequelize");
+const db = require("../../models");
+const moment = require("moment");
 
 const transactionController = {
-    // addToCart: async (req, res) => {
-    //     try {
-    //         const conditionDouble = await db.Carts.findOne({
-    //             where: {
-    //                 ProductBranchId,
-    //             },
-    //         })
-    //         if (conditionDouble) {
-    //             return res.status(400).json({
-    //                 message: "Product already added",
-    //             })
-    //         }
-
-    //         const addProduct = await Carts.create({
-    //             ProductBranchId: id,
-    //             UserId: req.user.id,
-    //         })
-    //         return res.status(200).json({
-    //             message: "Added to cart",
-    //             data: addProduct,
-    //         })
-    //     } catch (err) {
-    //         console.log(err)
-    //         return res.status(500).json({
-    //             message: "server error",
-    //         })
-    //     }
-    // },
-    createPayment: async (req, res) => {
-        try {
-            await db.Transaction.create({ ...req.body })
-
-            return res.status(200).json({
-                message: "create transaction",
-            })
-        } catch (err) {
-            console.log(err)
-            return res.status(500).json({
-                message: "Server error",
-            })
-        }
-    },
     updatePayment: async (req, res) => {
         try {
-            await db.Transaction.findOne({
+            const get = await db.Transaction.findOne({
                 where: {
                     id: req.params.id,
                 },
-            })
+                attributes: ["expired_date"],
+            });
+
+            const getExpDate = Object.values(get.dataValues);
+            const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
+            const expDate = moment(getExpDate[0])
+                .add(-7, "hours")
+                .format("YYYY-MM-DD HH:mm:ss");
+
+            if (currentDate > expDate) {
+                return res.status(200).json({
+                    message: "Payment expired",
+                });
+            }
 
             await db.Transaction.update(
                 {
@@ -61,18 +33,45 @@ const transactionController = {
                         id: req.params.id,
                     },
                 }
-            )
+            );
 
             return res.status(200).json({
                 message: "Payment uploaded",
-            })
+            });
         } catch (err) {
-            console.log(err)
+            console.log(err);
             return res.status(500).json({
                 message: "Server error upload payment",
-            })
+            });
         }
     },
-}
+    getTransactionData: async (req, res) => {
+        try {
+            const get = await db.Transaction.findOne({
+                where: {
+                    id: req.params.id,
+                },
+                attributes: ["expired_date", "total_price"],
+            });
 
-module.exports = transactionController
+            const getExpDate = Object.values(get.dataValues);
+            const price = Object.values(get.dataValues)[1];
+            const expDate = moment(getExpDate[0])
+                .add(-7, "hours")
+                .format("LLL");
+
+            return res.status(200).json({
+                message: "Get successful",
+                price,
+                expDate,
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({
+                message: err.message,
+            });
+        }
+    },
+};
+
+module.exports = transactionController;
