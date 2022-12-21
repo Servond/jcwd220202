@@ -22,14 +22,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      branch_address: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      distance: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
     },
     {
       sequelize,
