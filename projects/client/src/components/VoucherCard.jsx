@@ -10,13 +10,16 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import uploadProduct from "../assets/product_upload.png";
+import voucherDiscountStory from "../assets/discount_voucher.png";
+import freeShipmentStory from "../assets/shipment.png";
+import buy1Get1Story from "../assets/buy1get1.png";
 
 const VoucherCard = ({
   voucher_name,
   branch_name,
   discount_amount_nominal,
   discount_amount_percentage,
-  is_Inactive,
+  is_Active,
   minimum_payment,
   minimum_transaction_done,
   quantity,
@@ -24,6 +27,8 @@ const VoucherCard = ({
   voucher_start_date,
   voucher_end_date,
   voucher_type,
+  onOpenAlert,
+  is_Deleted,
 }) => {
   const formatRupiah = (value) => {
     return new Intl.NumberFormat("id-ID", {
@@ -69,6 +74,77 @@ const VoucherCard = ({
     }
   };
 
+  const showActiveOrInActive = () => {
+    if (is_Active == 0 && is_Deleted == 0) {
+      return <Badge colorScheme="red">Inactive</Badge>;
+    }
+
+    if (is_Active == 0 && is_Deleted == 1) {
+      return (
+        <>
+          <Badge colorScheme="red">Inactive</Badge>
+          <Badge colorScheme="red" ml={"10px"}>
+            Deleted
+          </Badge>
+        </>
+      );
+    }
+
+    if (is_Active == 1) {
+      return <Badge colorScheme="green">Active</Badge>;
+    }
+  };
+
+  const showImage = () => {
+    if (voucher_type === "Discount Voucher") {
+      return (
+        <Image
+          src={voucherDiscountStory}
+          alt="logo"
+          display={"block"}
+          mt={"20px"}
+          ml={"auto"}
+          mr={"auto"}
+          height={"80px"}
+        />
+      );
+    }
+
+    if (voucher_type === "Free Shipment") {
+      return (
+        <Image
+          src={freeShipmentStory}
+          alt="logo"
+          display={"block"}
+          mt={"20px"}
+          ml={"auto"}
+          mr={"auto"}
+          height={"80px"}
+        />
+      );
+    }
+
+    if (voucher_type === "Buy 1 Get 1") {
+      return (
+        <Image
+          src={buy1Get1Story}
+          alt="logo"
+          display={"block"}
+          mt={"20px"}
+          ml={"auto"}
+          mr={"auto"}
+          height={"80px"}
+        />
+      );
+    }
+  };
+
+  const openDeleteAlert = () => {
+    onOpenAlert();
+
+    document.body.style.overflow = "hidden";
+  };
+
   return (
     <>
       <Box marginTop={"20px"} mx={"20px"}>
@@ -91,11 +167,7 @@ const VoucherCard = ({
             pb={"5px"}
           >
             <Box flex={1} fontWeight={"bold"} textAlign={"left"}>
-              {is_Inactive == 1 ? (
-                <Badge colorScheme="red">Inactive</Badge>
-              ) : (
-                <Badge colorScheme="green">Active</Badge>
-              )}
+              {showActiveOrInActive()}
             </Box>
             <Box
               bg="#81B29A"
@@ -109,16 +181,7 @@ const VoucherCard = ({
             </Box>
           </Box>
           <Flex mt={"5px"} px={"5px"}>
-            <Box flex="0.5">
-              <Image
-                src={uploadProduct}
-                alt="logo"
-                display={"block"}
-                ml={"auto"}
-                mr={"auto"}
-                height={"110px"}
-              />
-            </Box>
+            <Box flex="0.5">{showImage()}</Box>
             <Box flex="1">
               <Box display={"flex"}>
                 <Text fontWeight={"bold"}>{branch_name || "Loading..."}</Text>
@@ -151,9 +214,15 @@ const VoucherCard = ({
           </Flex>
           <Flex px={"5px"} height={"auto"}>
             <Box flex="0.5" textAlign={"center"}>
-              <Button bg={"#E07A5F"} _hover={{ bgColor: "#E07A5F" }}>
-                Delete
-              </Button>
+              {is_Deleted == 0 ? (
+                <Button
+                  bg={"#E07A5F"}
+                  _hover={{ bgColor: "#E07A5F" }}
+                  onClick={openDeleteAlert}
+                >
+                  Delete
+                </Button>
+              ) : null}
             </Box>
             <Box flex="1">
               <Box display={"flex"}>

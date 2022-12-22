@@ -36,4 +36,6 @@ router.get("/", verifyToken, adminVoucherController.getAllVoucherByBranch);
 
 router.get("/type", verifyToken, adminVoucherController.getVoucherType);
 
+router.delete("/:id", verifyToken, adminVoucherController.deleteVoucherById);
+
 module.exports = router;

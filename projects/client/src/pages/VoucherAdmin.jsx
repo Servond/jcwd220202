@@ -1,7 +1,12 @@
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
   Button,
-  calc,
   Flex,
   FormControl,
   Grid,
@@ -20,6 +25,7 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 
 import searchIcon from "../assets/search.png";
@@ -52,10 +58,17 @@ const VoucherAdmin = () => {
   const [currentSearch, setCurrentSearch] = useState("");
   const [totalVoucher, setTotalVoucher] = useState(0);
   const [activePage, setActivePage] = useState(1);
+  const [alert, setAlert] = useState(null);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenAlert,
+    onOpen: onOpenAlert,
+    onClose: onCloseAlert,
+  } = useDisclosure();
 
   const navigate = useNavigate();
+  const toast = useToast();
 
   const optionsSort = [
     { value: "createdAt ASC", label: "latest created" },
@@ -195,6 +208,31 @@ const VoucherAdmin = () => {
     formik.setFieldValue(name, value);
   };
 
+  const closeDeleteAlert = () => {
+    onCloseAlert();
+
+    document.body.style.overflow = "unset";
+  };
+
+  const deleteBtnHandler = async (id) => {
+    try {
+      await axiosInstance.delete(`/admin-voucher/${alert.id}`);
+
+      fetchAdminVoucher();
+      toast({ title: "voucher deleted", status: "info" });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const confirmDeleteBtnHandler = () => {
+    deleteBtnHandler(alert.id);
+    onCloseAlert();
+
+    setAlert(null);
+    document.body.style.overflow = "unset";
+  };
+
   const renderVoucher = () => {
     return voucher.map((val) => {
       return (
@@ -204,7 +242,7 @@ const VoucherAdmin = () => {
           branch_name={val.Branch.branch_name}
           discount_amount_nominal={val.discount_amount_nominal}
           discount_amount_percentage={val.discount_amount_percentage}
-          is_Inactive={val.is_Inactive}
+          is_Active={val.is_Active}
           minimum_payment={val.minimum_payment}
           minimum_transaction_done={val.minimum_transaction_done}
           quantity={val.quantity}
@@ -212,6 +250,8 @@ const VoucherAdmin = () => {
           voucher_start_date={val.voucher_start_date}
           voucher_end_date={val.voucher_end_date}
           voucher_type={val.VoucherType?.voucher_type}
+          onOpenAlert={() => onOpenAlert(setAlert(val))}
+          is_Deleted={val.is_Deleted}
         />
       );
     });
@@ -449,6 +489,62 @@ const VoucherAdmin = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
+      {/* modal for voucher type */}
+
+      {/* delete alert voucher */}
+      <AlertDialog isOpen={isOpenAlert} onClose={closeDeleteAlert}>
+        <AlertDialogOverlay>
+          <AlertDialogContent
+            mt={"35vh"}
+            fontFamily={"roboto"}
+            fontSize={"16px"}
+            bgColor={"#F4F1DE"}
+          >
+            <AlertDialogHeader
+              fontSize={"16px"}
+              fontWeight="bold"
+              ml={"10px"}
+              mt={"10px"}
+            >
+              Delete Voucher
+            </AlertDialogHeader>
+
+            <AlertDialogBody ml={"10px"}>
+              Are you sure? You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter display={"contents"}>
+              <Button
+                onClick={closeDeleteAlert}
+                mx={"30px"}
+                mt={"10px"}
+                borderRadius={"15px"}
+                bgColor={"#81B29A"}
+                color={"white"}
+                _hover={{
+                  bgColor: "green.500",
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={confirmDeleteBtnHandler}
+                mx={"30px"}
+                mt={"10px"}
+                mb={"40px"}
+                borderRadius={"15px"}
+                bgColor={"#E07A5F"}
+                _hover={{
+                  bgColor: "red.500",
+                }}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };

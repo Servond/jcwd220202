@@ -41,9 +41,13 @@ module.exports = (sequelize, DataTypes) => {
       quantity: {
         type: DataTypes.INTEGER,
       },
-      is_Inactive: {
+      is_Active: {
         type: DataTypes.BOOLEAN,
-        defaultValue: true,
+        defaultValue: false,
+      },
+      is_Deleted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {

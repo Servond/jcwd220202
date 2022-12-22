@@ -270,7 +270,7 @@ const adminVoucherController = {
 
       await db.Voucher.update(
         {
-          is_Inactive: 1,
+          is_Active: false,
         },
         {
           where: {
@@ -289,6 +289,7 @@ const adminVoucherController = {
       ) {
         if (!Number(VoucherTypeId)) {
           const findVoucherByBranch = await db.Voucher.findAndCountAll({
+            paranoid: false,
             limit: Number(_limit),
             offset: (_page - 1) * _limit,
             include: [
@@ -324,6 +325,7 @@ const adminVoucherController = {
         }
 
         const findVoucherByBranch = await db.Voucher.findAndCountAll({
+          paranoid: false,
           limit: Number(_limit),
           offset: (_page - 1) * _limit,
           include: [
@@ -360,6 +362,7 @@ const adminVoucherController = {
       }
 
       const findVoucherByBranch = await db.Voucher.findAndCountAll({
+        paranoid: false,
         limit: Number(_limit),
         offset: (_page - 1) * _limit,
         include: [
@@ -395,6 +398,38 @@ const adminVoucherController = {
       return res.status(200).json({
         message: "get voucher type",
         data: findVoucherType,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "server error",
+      });
+    }
+  },
+  deleteVoucherById: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      await db.Voucher.update(
+        {
+          is_Deleted: true,
+          is_Active: false,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+
+      await db.Voucher.destroy({
+        where: {
+          id: id,
+        },
+      });
+
+      return res.status(200).json({
+        message: "voucher deleted",
       });
     } catch (error) {
       console.log(error);
