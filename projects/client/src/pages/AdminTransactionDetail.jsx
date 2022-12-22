@@ -45,6 +45,7 @@ const AdminTransactionDetail = () => {
 
   const optionsStatus = [
     { value: "Waiting For Payment", label: "Waiting For Payment" },
+    { value: "Waiting For Approval", label: "Waiting For Approval" },
     { value: "Payment Approved", label: "Payment Approved" },
     { value: "Product In Shipment", label: "Product In Shipment" },
     { value: "Success", label: "Success" },
@@ -169,7 +170,10 @@ const AdminTransactionDetail = () => {
     let sumPrice = 0;
 
     for (let i = 0; i < transactionItem.length; i++) {
-      sumPrice = sumPrice + transactionItem[i].current_price;
+      sumPrice =
+        sumPrice +
+        transactionItem[i].current_price +
+        transactionItem[i].applied_discount;
     }
 
     return sumPrice;
@@ -239,7 +243,7 @@ const AdminTransactionDetail = () => {
 
   const renderItemTransaction = () => {
     return transactionItem.map((val) => {
-      const countDiscount = val.current_price - val.applied_discount;
+      const countOriginalPrice = val.current_price + val.applied_discount;
 
       return (
         <Box display={"flex"} mt={"10px"} key={val.id.toString()}>
@@ -262,15 +266,15 @@ const AdminTransactionDetail = () => {
               {val.applied_discount ? (
                 <>
                   <Text ml={"5px"} textDecoration={"line-through"}>
-                    {formatRupiah(val.current_price) || "Loading..."}
+                    {formatRupiah(countOriginalPrice) || "Loading..."}
                   </Text>
                   <Text ml={"5px"}>
-                    {formatRupiah(countDiscount) || "Loading..."}
+                    {formatRupiah(val.current_price) || "Loading..."}
                   </Text>
                 </>
               ) : (
                 <Text ml={"5px"}>
-                  {formatRupiah(val.current_price) || "Loading..."}
+                  {formatRupiah(countOriginalPrice) || "Loading..."}
                 </Text>
               )}
             </Box>
@@ -423,7 +427,8 @@ const AdminTransactionDetail = () => {
           <Box>
             <Text fontWeight={"bold"}>Address:</Text>
             <Text fontWeight={"normal"}>
-              {transactionDetail?.User?.Addresses[0].address || "Loading"}
+              {transactionDetail?.User?.Address?.address || "Loading"}
+              {/* {"Loading"} */}
             </Text>
             <Text fontWeight={"bold"} mt={"5px"}>
               Shipping Method:

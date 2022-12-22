@@ -41,16 +41,16 @@ import { voucherTypeSelection } from "../assets/voucherType";
 import { Link, useNavigate } from "react-router-dom";
 import VoucherCard from "../components/VoucherCard";
 
-const maxItemsPerPage = 12;
+const maxItemsPerPage = 10;
 
 const VoucherAdmin = () => {
-  const [category, setCategory] = useState([]);
-  const [product, setProduct] = useState([]);
-  const [sortBy, setSortBy] = useState("product_name");
+  const [voucherType, setVoucherType] = useState([]);
+  const [voucher, setVoucher] = useState([]);
+  const [sortBy, setSortBy] = useState("createdAt");
   const [sortDir, setSortDir] = useState("ASC");
-  const [filter, setFilter] = useState("All");
+  const [filter, setFilter] = useState("");
   const [currentSearch, setCurrentSearch] = useState("");
-  const [totalProducts, setTotalProducts] = useState(0);
+  const [totalVoucher, setTotalVoucher] = useState(0);
   const [activePage, setActivePage] = useState(1);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -58,30 +58,30 @@ const VoucherAdmin = () => {
   const navigate = useNavigate();
 
   const optionsSort = [
-    { value: "product_name ASC", label: "A to Z" },
-    { value: "product_name DESC", label: "Z to A" },
-    { value: "product_price ASC", label: "Lowest to Highest price" },
-    { value: "product_price DESC", label: "Highest to Lowest Price" },
+    { value: "createdAt ASC", label: "latest created" },
+    { value: "createdAt DESC", label: "oldest created" },
+    { value: "voucher_start_date ASC", label: "latest start date" },
+    { value: "voucher_start_date DESC", label: "oldest start date" },
   ];
 
-  const fetchCategory = async () => {
+  const fetchVoucherType = async () => {
     try {
-      const response = await axiosInstance.get(`/category`);
+      const response = await axiosInstance.get(`/admin-voucher/type`);
 
-      setCategory(response.data.data);
+      setVoucherType(response.data.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const renderCategory = category.map((val) => {
+  const renderVoucherType = voucherType.map((val) => {
     return {
       value: val.id,
-      label: val.category_name,
+      label: val.voucher_type,
     };
   });
 
-  renderCategory.unshift({ value: "All", label: "All" });
+  renderVoucherType.unshift({ value: "", label: "All" });
 
   const colourStyles = {
     control: (base) => ({
@@ -123,26 +123,28 @@ const VoucherAdmin = () => {
     },
   };
 
-  const fetchAdminProduct = async () => {
+  const fetchAdminVoucher = async () => {
     try {
-      const response = await axiosInstance.get("/admin-product/branch", {
+      const response = await axiosInstance.get("/admin-voucher", {
         params: {
           _sortBy: sortBy,
           _sortDir: sortDir,
-          CategoryId: filter,
-          product_name: currentSearch,
+          VoucherTypeId: filter,
+          voucher_name: currentSearch,
           _page: activePage,
           _limit: maxItemsPerPage,
         },
       });
 
-      setProduct(response.data.data[0].ProductBranches);
+      setVoucher(response.data.data);
 
-      setTotalProducts(response.data.dataCount);
+      setTotalVoucher(response.data.dataCount);
     } catch (error) {
       console.log(error);
     }
   };
+
+  const maxPage = Math.ceil(totalVoucher / maxItemsPerPage);
 
   const openSelectVoucherModal = () => {
     onOpen();
@@ -161,8 +163,6 @@ const VoucherAdmin = () => {
 
     closeSelectVoucherModal();
   };
-
-  const maxPage = Math.ceil(totalProducts / maxItemsPerPage);
 
   const handlePageClick = (data) => {
     let currentPage = data.selected + 1;
@@ -195,6 +195,36 @@ const VoucherAdmin = () => {
     formik.setFieldValue(name, value);
   };
 
+  const renderVoucher = () => {
+    return voucher.map((val) => {
+      return (
+        <VoucherCard
+          key={val.id.toString()}
+          voucher_name={val.voucher_name}
+          branch_name={val.Branch.branch_name}
+          discount_amount_nominal={val.discount_amount_nominal}
+          discount_amount_percentage={val.discount_amount_percentage}
+          is_Inactive={val.is_Inactive}
+          minimum_payment={val.minimum_payment}
+          minimum_transaction_done={val.minimum_transaction_done}
+          quantity={val.quantity}
+          applied_product={val.Product?.product_name}
+          voucher_start_date={val.voucher_start_date}
+          voucher_end_date={val.voucher_end_date}
+          voucher_type={val.VoucherType?.voucher_type}
+        />
+      );
+    });
+  };
+
+  useEffect(() => {
+    fetchVoucherType();
+  }, []);
+
+  useEffect(() => {
+    fetchAdminVoucher();
+  }, [sortBy, sortDir, filter, currentSearch, activePage]);
+
   return (
     <Box
       backgroundColor={"#F4F1DE"}
@@ -214,10 +244,10 @@ const VoucherAdmin = () => {
               <InputGroup>
                 <Input
                   name="search"
-                  placeholder="Search By Product"
+                  placeholder="Search Voucher Name"
                   _placeholder={{ color: "black.500" }}
-                  //   value={formik.values.search}
-                  //   onChange={formChangeHandler}
+                  value={formik.values.search}
+                  onChange={formChangeHandler}
                   bgColor={"white"}
                   height={"40px"}
                   marginLeft={"6px"}
@@ -231,7 +261,7 @@ const VoucherAdmin = () => {
                     _hover={{
                       bgColor: "#F2CC8F",
                     }}
-                    // onClick={formik.handleSubmit}
+                    onClick={formik.handleSubmit}
                   >
                     <Image
                       src={searchIcon}
@@ -262,10 +292,10 @@ const VoucherAdmin = () => {
                   mt={"10px"}
                 />
                 <Select
-                  //   options={optionsSort}
+                  options={optionsSort}
                   styles={colourStyles}
                   placeholder={"Sort"}
-                  //   onChange={sortProductHandler}
+                  onChange={sortProductHandler}
                 />
               </GridItem>
             </Grid>
@@ -286,10 +316,10 @@ const VoucherAdmin = () => {
                   mt={"10px"}
                 />
                 <Select
-                  //   options={renderCategory}
+                  options={renderVoucherType}
                   styles={colourStyles}
                   placeholder={"Filter"}
-                  //   onChange={filterProductHandler}
+                  onChange={filterProductHandler}
                 />
               </GridItem>
             </Grid>
@@ -323,7 +353,7 @@ const VoucherAdmin = () => {
           </GridItem>
         </Grid>
       </Box>
-      {/* {!product.length ? null : (
+      {!voucher.length ? null : (
         <Box marginTop={"20px"}>
           <ReactPaginate
             previousLabel={"previous"}
@@ -344,10 +374,8 @@ const VoucherAdmin = () => {
             breakLinkClassName={"page-link"}
           />
         </Box>
-      )} */}
-      <VoucherCard />
-
-      {/* {!product.length ? (
+      )}
+      {!voucher.length ? (
         <Box display={"grid"} mt={"15vh"}>
           <Text textAlign={"center"} fontWeight={"bold"}>
             No item(s) found
@@ -361,14 +389,13 @@ const VoucherAdmin = () => {
           />
         </Box>
       ) : (
-        <Box>{renderAdminProduct()}</Box>
-      )} */}
+        <Box>{renderVoucher()}</Box>
+      )}
       <Box>
         <AdminNavbar />
       </Box>
 
       {/* modal for voucher type */}
-
       <Modal isOpen={isOpen} onClose={closeSelectVoucherModal}>
         <ModalOverlay />
         <ModalContent

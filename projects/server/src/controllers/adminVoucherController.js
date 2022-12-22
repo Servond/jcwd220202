@@ -241,6 +241,168 @@ const adminVoucherController = {
       });
     }
   },
+  getAllVoucherByBranch: async (req, res) => {
+    try {
+      const {
+        voucher_name = "",
+        VoucherTypeId = "",
+        _sortBy = "createdAt",
+        _sortDir = "ASC",
+        _limit = 10,
+        _page = 1,
+      } = req.query;
+
+      const findAdmin = await db.Branch.findOne({
+        where: {
+          UserId: req.user.id,
+        },
+      });
+
+      const findAllVoucherZeroQty = await db.Voucher.findAll({
+        where: {
+          quantity: 0,
+        },
+      });
+
+      const voucherZeroQtyId = findAllVoucherZeroQty.map((val) => {
+        return val.id;
+      });
+
+      await db.Voucher.update(
+        {
+          is_Inactive: 1,
+        },
+        {
+          where: {
+            id: {
+              [Op.in]: voucherZeroQtyId,
+            },
+          },
+        }
+      );
+
+      if (
+        _sortBy === "voucher_start_date" ||
+        _sortBy === "createdAt" ||
+        voucher_name ||
+        VoucherTypeId
+      ) {
+        if (!Number(VoucherTypeId)) {
+          const findVoucherByBranch = await db.Voucher.findAndCountAll({
+            limit: Number(_limit),
+            offset: (_page - 1) * _limit,
+            include: [
+              {
+                model: db.Branch,
+              },
+              {
+                model: db.Product,
+                paranoid: false,
+              },
+              {
+                model: db.VoucherType,
+              },
+            ],
+            order: [[_sortBy, _sortDir]],
+            where: {
+              [Op.or]: [
+                {
+                  voucher_name: {
+                    [Op.like]: `%${voucher_name}%`,
+                  },
+                },
+              ],
+              BranchId: findAdmin.id,
+            },
+          });
+
+          return res.status(200).json({
+            message: "Get All Voucher By Branch",
+            data: findVoucherByBranch.rows,
+            dataCount: findVoucherByBranch.count,
+          });
+        }
+
+        const findVoucherByBranch = await db.Voucher.findAndCountAll({
+          limit: Number(_limit),
+          offset: (_page - 1) * _limit,
+          include: [
+            {
+              model: db.Branch,
+            },
+            {
+              model: db.Product,
+              paranoid: false,
+            },
+            {
+              model: db.VoucherType,
+            },
+          ],
+          order: [[_sortBy, _sortDir]],
+          where: {
+            [Op.or]: [
+              {
+                voucher_name: {
+                  [Op.like]: `%${voucher_name}%`,
+                },
+              },
+            ],
+            BranchId: findAdmin.id,
+            VoucherTypeId: VoucherTypeId,
+          },
+        });
+
+        return res.status(200).json({
+          message: "Get All Voucher By Branch",
+          data: findVoucherByBranch.rows,
+          dataCount: findVoucherByBranch.count,
+        });
+      }
+
+      const findVoucherByBranch = await db.Voucher.findAndCountAll({
+        limit: Number(_limit),
+        offset: (_page - 1) * _limit,
+        include: [
+          {
+            model: db.Branch,
+          },
+          {
+            model: db.Product,
+            paranoid: false,
+          },
+          {
+            model: db.VoucherType,
+          },
+        ],
+      });
+
+      return res.status(200).json({
+        message: "Get All Voucher By Branch",
+        data: findVoucherByBranch.rows,
+        dataCount: findVoucherByBranch.count,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "server error",
+      });
+    }
+  },
+  getVoucherType: async (req, res) => {
+    try {
+      const findVoucherType = await db.VoucherType.findAll();
+
+      return res.status(200).json({
+        message: "get voucher type",
+        data: findVoucherType,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "server error",
+      });
+    }
+  },
 };
 
 module.exports = adminVoucherController;

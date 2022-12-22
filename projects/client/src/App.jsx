@@ -120,7 +120,6 @@ const App = () => {
         maxWidth={"480px"}
         margin={"auto"}
         boxSizing={"border-box"}
-        border={"2px solid lightgrey"}
         fontFamily={"roboto"}
       >
         <Routes>

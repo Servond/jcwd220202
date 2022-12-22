@@ -282,7 +282,8 @@ const adminTransactionController = {
         });
       } else if (
         transaction_status === "Cancel" ||
-        transaction_status === "Waiting For Payment"
+        transaction_status === "Waiting For Payment" ||
+        transaction_status === "Waiting For Approval"
       ) {
         await db.Transaction.update(
           {
@@ -374,6 +375,7 @@ const adminTransactionController = {
           BranchId: findAdmin.id,
           transaction_status: {
             [Op.in]: [
+              "Waiting For Approval",
               "Waiting For Payment",
               "Payment Approved",
               "Product In Shipment",

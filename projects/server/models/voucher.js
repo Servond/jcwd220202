@@ -41,14 +41,16 @@ module.exports = (sequelize, DataTypes) => {
       quantity: {
         type: DataTypes.INTEGER,
       },
-      is_expired: {
+      is_Inactive: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        defaultValue: true,
       },
     },
     {
       sequelize,
       modelName: "Voucher",
+      paranoid: true,
+      timestamps: true,
     }
   );
   return Voucher;

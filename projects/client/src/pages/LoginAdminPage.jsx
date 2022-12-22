@@ -97,7 +97,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <Box height={"932px"}>
+      <Box height={"932px"} border={"2px solid lightgrey"}>
         {/* <Box marginTop={"20px"} marginLeft={"20px"}>
           <Image objectFit="cover" src={backIcon} alt="back" height={"40px"} />
         </Box> */}
