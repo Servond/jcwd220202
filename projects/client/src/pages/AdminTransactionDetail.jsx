@@ -91,6 +91,8 @@ const AdminTransactionDetail = () => {
     }
   };
 
+  console.log(transactionDetail);
+
   const formik = useFormik({
     initialValues: {
       transaction_status: "",
@@ -199,7 +201,11 @@ const AdminTransactionDetail = () => {
     }
 
     if (transactionDetail.ReferralVoucherId !== null) {
-      return <Text fontWeight={"normal"}>{"Referral Voucher Used"}</Text>;
+      return (
+        <Text fontWeight={"normal"}>
+          {transactionDetail?.ReferralVoucher?.voucher_name || "Loading..."}
+        </Text>
+      );
     }
   };
 
@@ -212,21 +218,124 @@ const AdminTransactionDetail = () => {
       );
     }
 
-    if (transactionDetail.VoucherId !== null) {
-      return <Text fontWeight={"normal"}>{"Grocerin Voucher Used"}</Text>;
+    if (transactionDetail?.VoucherId !== null) {
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type ===
+        "Free Shipment"
+      ) {
+        return (
+          <>
+            <Text fontWeight={"bold"}>{"Free Shipment"}</Text>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.Voucher?.voucher_name || "Loading..."}
+            </Text>
+          </>
+        );
+      }
+
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type ===
+        "Discount Voucher"
+      ) {
+        return (
+          <>
+            <Text fontWeight={"bold"}>{"Discount Voucher"}</Text>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.Voucher?.voucher_name || "Loading..."}
+            </Text>
+          </>
+        );
+      }
+
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type === "Buy 1 Get 1"
+      ) {
+        return (
+          <>
+            <Text fontWeight={"bold"}>{"Buy 1 Get 1"}</Text>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.Voucher?.voucher_name || "Loading..."}
+            </Text>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.Voucher?.Product?.product_name ||
+                "Loading..."}
+            </Text>
+          </>
+        );
+      }
     }
   };
 
   const finalVoucher = () => {
     if (
-      transactionDetail.VoucherId === null &&
-      transactionDetail.ReferralVoucherId === null
+      transactionDetail?.VoucherId === null &&
+      transactionDetail?.ReferralVoucherId === null
     ) {
       return <Text textAlign={"center"}>{"-"}</Text>;
-    } else {
-      return <Text>It used voucher</Text>;
+    } else if (transactionDetail?.ReferralVoucher) {
+      return (
+        <Text>
+          -{" "}
+          {formatRupiah(transactionDetail?.ReferralVoucher?.discount_amount) ||
+            "Loading..."}
+        </Text>
+      );
+    } else if (transactionDetail?.Voucher) {
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type ===
+        "Free Shipment"
+      ) {
+        if (transactionDetail?.Voucher?.discount_amount_nominal) {
+          return (
+            <Text>
+              -{" "}
+              {formatRupiah(
+                transactionDetail?.Voucher?.discount_amount_nominal
+              ) || "Loading..."}
+            </Text>
+          );
+        } else if (transactionDetail?.Voucher?.discount_amount_percentage) {
+          const countShipmentDiscount =
+            (transactionDetail?.Voucher?.discount_amount_percentage / 100) *
+            transactionDetail?.shipment_price;
+          return (
+            <Text>- {formatRupiah(countShipmentDiscount) || "Loading..."}</Text>
+          );
+        }
+      }
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type === "Buy 1 Get 1"
+      ) {
+        return <Text textAlign={"center"}>{"-"}</Text>;
+      }
+
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type ===
+        "Discount Voucher"
+      ) {
+        if (transactionDetail?.Voucher?.discount_amount_nominal) {
+          return (
+            <Text>
+              -{" "}
+              {formatRupiah(
+                transactionDetail?.Voucher?.discount_amount_nominal
+              ) || "Loading..."}
+            </Text>
+          );
+        } else if (transactionDetail?.Voucher?.discount_amount_percentage) {
+          const countProductDiscount =
+            (transactionDetail?.Voucher?.discount_amount_percentage / 100) *
+            transactionDetail?.Voucher?.Product?.product_price;
+          return (
+            <Text>- {formatRupiah(countProductDiscount) || "Loading..."}</Text>
+          );
+        }
+      }
     }
   };
+
+  console.log(transactionDetail?.Voucher?.discount_amount_percentage / 100);
+  console.log(transactionDetail?.Product?.product_price);
 
   const formatRupiah = (value) => {
     return new Intl.NumberFormat("id-ID", {

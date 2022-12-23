@@ -5,6 +5,8 @@ const { join } = require("path");
 const db = require("../models");
 const dotenv = require("dotenv");
 const fs = require("fs");
+const startVoucherScheduler = require("../lib/startVoucherScheduler");
+const endVoucherScheduler = require("../lib/endVoucherSchedule");
 
 // dotenv.config();
 
@@ -107,3 +109,6 @@ app.listen(PORT, async (err) => {
     console.log(`APP RUNNING at ${PORT} ✅`);
   }
 });
+
+startVoucherScheduler.invoke();
+endVoucherScheduler.invoke();

@@ -97,6 +97,8 @@ const Register = () => {
     formik.setFieldValue(name, value);
   };
 
+  console.log(formik.values);
+
   return (
     <>
       <Box height={"932px"} border={"2px solid lightgrey"}>
@@ -256,6 +258,7 @@ const Register = () => {
                 bgColor={"#81B29A"}
                 width={"100px"}
                 height={"35px"}
+                isDisabled={formik.isSubmitting}
               >
                 Submit
               </Button>
