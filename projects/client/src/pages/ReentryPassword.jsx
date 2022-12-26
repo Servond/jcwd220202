@@ -56,6 +56,8 @@ const ReentryPassword = () => {
           }
         );
 
+        navigate("/login/user");
+
         toast({
           title: "Password changed successfully",
           description: response.data.message,
@@ -91,7 +93,7 @@ const ReentryPassword = () => {
 
   return (
     <>
-      <Box height={"932px"} border={"2px solid lightgrey"}>
+      <Box height={"932px"}>
         <Box marginTop={"20px"} marginLeft={"20px"}>
           <Image
             objectFit="cover"
@@ -195,6 +197,7 @@ const ReentryPassword = () => {
                 bgColor={"#81B29A"}
                 width={"100px"}
                 height={"35px"}
+                onClick
               >
                 Submit
               </Button>

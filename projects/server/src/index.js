@@ -8,8 +8,9 @@ const fs = require("fs");
 const startVoucherScheduler = require("../lib/startVoucherScheduler");
 const endVoucherScheduler = require("../lib/endVoucherSchedule");
 const salesReportScheduler = require("../lib/salesReportScheduler");
+const schedule = require("../lib/schedulePayment");
 
-// dotenv.config();
+dotenv.config();
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -116,3 +117,4 @@ app.listen(PORT, async (err) => {
 startVoucherScheduler.invoke();
 endVoucherScheduler.invoke();
 salesReportScheduler.invoke();
+schedule.invoke();

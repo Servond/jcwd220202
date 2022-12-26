@@ -34,6 +34,7 @@ import "./style/index.css";
 import NotFound from "./pages/404Page";
 import CreateBranch from "./pages/CreateBranchSprAdmin";
 import UserSprAdmin from "./pages/UserSprAdmin";
+import Payment from "./pages/Payment";
 import CartUser from "./pages/CartPageUser";
 import OrderUser from "./pages/OrderUser";
 import AddVoucherAdmin from "./pages/AddVoucherAdmin";
@@ -112,6 +113,7 @@ const App = () => {
           />
         </Box>
       </Box>
+      // <div>Loading...</div>
     );
   }
 
