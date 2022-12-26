@@ -24,7 +24,7 @@ import {
 import TransactionListBar from "../components/TransactionListBar";
 import { useState } from "react";
 import { axiosInstance } from "../api";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import Select from "react-select";
 import { useFormik } from "formik";
@@ -34,6 +34,8 @@ const AdminTransactionDetail = () => {
   const [transactionDetail, setTransactionDetail] = useState({});
   const [transactionItem, setTransactionItem] = useState([]);
 
+  console.log(transactionItem);
+
   const params = useParams();
   const toast = useToast();
   const {
@@ -41,7 +43,6 @@ const AdminTransactionDetail = () => {
     onOpen: onOpenStatus,
     onClose: onCloseStatus,
   } = useDisclosure();
-  const navigate = useNavigate();
 
   const optionsStatus = [
     { value: "Waiting For Payment", label: "Waiting For Payment" },
@@ -333,9 +334,6 @@ const AdminTransactionDetail = () => {
       }
     }
   };
-
-  console.log(transactionDetail?.Voucher?.discount_amount_percentage / 100);
-  console.log(transactionDetail?.Product?.product_price);
 
   const formatRupiah = (value) => {
     return new Intl.NumberFormat("id-ID", {
@@ -722,6 +720,7 @@ const AdminTransactionDetail = () => {
               _hover={{
                 bgColor: "green.500",
               }}
+              isDisabled={formik.isSubmitting}
             >
               Submit
             </Button>

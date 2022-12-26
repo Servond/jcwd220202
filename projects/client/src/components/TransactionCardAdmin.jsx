@@ -19,6 +19,8 @@ const TransactionCardAdmin = ({
   TransactionItems,
   transaction_status,
 }) => {
+  console.log(TransactionItems);
+
   const showFirstItem = TransactionItems.map((val) => {
     const countOriginalPrice = val.current_price + val.applied_discount;
 
@@ -31,6 +33,8 @@ const TransactionCardAdmin = ({
       discounted_product: val.current_price,
     };
   });
+
+  console.log(showFirstItem[0]);
 
   const showDiscount = () => {
     if (showFirstItem[0].applied_discount) {

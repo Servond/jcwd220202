@@ -6,7 +6,16 @@ const { Op } = require("sequelize");
 const endVoucherScheduler = schedule.scheduleJob("0 * * * * *", async () => {
   const getVoucher = await db.Voucher.findAll({
     where: {
-      voucher_end_date: moment(),
+      [Op.or]: [
+        {
+          voucher_end_date: moment(),
+        },
+        {
+          voucher_end_date: {
+            [Op.lt]: moment(),
+          },
+        },
+      ],
     },
   });
 

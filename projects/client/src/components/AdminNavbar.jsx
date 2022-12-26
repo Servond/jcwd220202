@@ -24,24 +24,6 @@ import OtherMenuBar from "./OtherMenuBar";
 import { Link, useLocation } from "react-router-dom";
 
 const AdminNavbar = () => {
-  // const [menu, setMenu] = useState([
-  //   {
-  //     icon: homeLogo,
-  //     text: "Home",
-  //     link: "/admin/dashboard",
-  //   },
-  //   {
-  //     icon: productLogo,
-  //     text: "Product",
-  //     link: "/admin/product",
-  //   },
-  //   {
-  //     icon: orderLogo,
-  //     text: "Order",
-  //     link: "/admin/transaction",
-  //   },
-  // ]);
-
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation();
@@ -58,29 +40,6 @@ const AdminNavbar = () => {
     document.body.style.overflow = "hidden";
   };
 
-  // const renderIcon = () => {
-  //   return menu.map((val) => {
-  //     return (
-  //       <GridItem h="65px" key={val.icon}>
-  //         {/* taro key di setiap map yang bersifat unik */}
-  //         <Link to={val.link}>
-  //           <Box display={"grid"}>
-  //             <Image
-  //               src={val.icon}
-  //               alt="logo"
-  //               height={"40px"}
-  //               justifySelf={"center"}
-  //             />
-  //             <Text textAlign={"center"} fontFamily={"roboto"} color={"black"}>
-  //               {val.text}
-  //             </Text>
-  //           </Box>
-  //         </Link>
-  //       </GridItem>
-  //     );
-  //   });
-  // };
-
   return (
     <>
       <Box
@@ -93,9 +52,9 @@ const AdminNavbar = () => {
         fontWeight={"bold"}
         maxWidth={"480px"}
         margin={"auto"}
+        zIndex={"3"}
       >
         <Grid templateColumns="repeat(4, 1fr)" gap={1} margin={"5px"}>
-          {/* {renderIcon()} */}
           {location.pathname === "/admin/dashboard" ? (
             <GridItem h="65px">
               <Link to={"/admin/dashboard"}>

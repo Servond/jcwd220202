@@ -49,6 +49,12 @@ const adminVoucherController = {
       const endUnixDate = moment(voucher_end_date).unix();
       const nowUnixDate = moment(new Date()).unix();
 
+      if (startUnixDate === endUnixDate) {
+        return res.status(400).json({
+          message: "start date cant be the same as end date",
+        });
+      }
+
       if (nowUnixDate > startUnixDate) {
         return res.status(400).json({
           message: "we cant go back to the past",
@@ -430,6 +436,24 @@ const adminVoucherController = {
 
       return res.status(200).json({
         message: "voucher deleted",
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "server error",
+      });
+    }
+  },
+  getActiveVoucher: async (req, res) => {
+    try {
+      const findActiveVoucher = await db.Voucher.findAndCountAll({
+        where: {
+          is_Active: 1,
+        },
+      });
+
+      return res.status(200).json({
+        dataCount: findActiveVoucher.count,
       });
     } catch (error) {
       console.log(error);

@@ -38,6 +38,8 @@ import CartUser from "./pages/CartPageUser";
 import OrderUser from "./pages/OrderUser";
 import AddVoucherAdmin from "./pages/AddVoucherAdmin";
 import CategoryEdit from "./pages/EditCategory";
+import SprAdminStatisctic from "./pages/SprAdminStatistic";
+import AdminStatistic from "./pages/AdminStatistic";
 
 const App = () => {
   const authSelector = useSelector((state) => state.auth);
@@ -110,7 +112,6 @@ const App = () => {
           />
         </Box>
       </Box>
-      // <div>Loading...</div>
     );
   }
 
@@ -172,6 +173,11 @@ const App = () => {
           <Route path="/user/order" element={<OrderUser />} />
           <Route path="/admin/voucher" element={<VoucherAdmin />} />
           <Route path="/admin/voucher/:url" element={<AddVoucherAdmin />} />
+          <Route
+            path="/super-admin/statistic"
+            element={<SprAdminStatisctic />}
+          />
+          <Route path="/admin/statistic" element={<AdminStatistic />} />
         </Routes>
       </Box>
     </>
