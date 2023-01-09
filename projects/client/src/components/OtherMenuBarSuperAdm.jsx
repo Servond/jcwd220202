@@ -52,7 +52,6 @@ const OtherMenuBarSuperAdm = ({ isOpen, closeModal }) => {
   return (
     <>
       <Modal isOpen={isOpen} onClose={closeModal}>
-        {/* ini yang disamadenganin adalah props yang akan dipassing */}
         <ModalOverlay />
         <ModalContent
           position={"fixed"}
@@ -105,7 +104,7 @@ const OtherMenuBarSuperAdm = ({ isOpen, closeModal }) => {
               width={"130px"}
               p={"5px"}
               border={"2px solid white"}
-              borderRadius={"20px"}
+              borderRadius={"10px"}
               onClick={logoutBtnHandler}
             >
               <Image src={logoutLogo} height={"40px"} ml={"5px"} />

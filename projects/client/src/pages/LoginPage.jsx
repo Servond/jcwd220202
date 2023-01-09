@@ -41,7 +41,6 @@ const LoginPage = () => {
           email,
           password,
         });
-        console.log(response);
 
         localStorage.setItem("auth_token", response.data.token);
         dispatch(
@@ -80,7 +79,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <Box height={"932px"}>
+      <Box height={"932px"} border={"2px solid lightgrey"}>
         <Box marginTop={"20px"} marginLeft={"20px"}>
           <Image
             objectFit="cover"

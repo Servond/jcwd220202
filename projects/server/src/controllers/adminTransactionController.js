@@ -191,6 +191,15 @@ const adminTransactionController = {
           },
           {
             model: db.Voucher,
+            include: [
+              {
+                model: db.Product,
+                include: db.ProductBranch,
+              },
+              {
+                model: db.VoucherType,
+              },
+            ],
           },
         ],
       });
@@ -282,7 +291,8 @@ const adminTransactionController = {
         });
       } else if (
         transaction_status === "Cancel" ||
-        transaction_status === "Waiting For Payment"
+        transaction_status === "Waiting For Payment" ||
+        transaction_status === "Waiting For Approval"
       ) {
         await db.Transaction.update(
           {
@@ -296,7 +306,10 @@ const adminTransactionController = {
           }
         );
 
-        if (transaction_status === "Waiting For Payment") {
+        if (
+          transaction_status === "Waiting For Payment" ||
+          transaction_status === "Waiting For Approval"
+        ) {
           const rawHTML = fs.readFileSync(
             "templates/transaction_status_cancel.html",
             "utf-8"
@@ -326,6 +339,14 @@ const adminTransactionController = {
           });
         }
 
+        const formatRupiah = (value) => {
+          return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+          }).format(value);
+        };
+
         const rawHTML = fs.readFileSync(
           "templates/transaction_status_cancel.html",
           "utf-8"
@@ -341,6 +362,9 @@ const adminTransactionController = {
             .split("T")[0],
           transactionStatus: transaction_status,
           noteForCustomer: note_to_customer,
+          refund: `Due to cancelled transaction, we ensure you to do refund by the amount of ${formatRupiah(
+            findTransaction.total_price
+          )} (based on transaction total price) to your account number.`,
         });
 
         await emailer({
@@ -374,6 +398,7 @@ const adminTransactionController = {
           BranchId: findAdmin.id,
           transaction_status: {
             [Op.in]: [
+              "Waiting For Approval",
               "Waiting For Payment",
               "Payment Approved",
               "Product In Shipment",

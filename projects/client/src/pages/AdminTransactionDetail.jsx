@@ -24,7 +24,7 @@ import {
 import TransactionListBar from "../components/TransactionListBar";
 import { useState } from "react";
 import { axiosInstance } from "../api";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import Select from "react-select";
 import { useFormik } from "formik";
@@ -41,10 +41,10 @@ const AdminTransactionDetail = () => {
     onOpen: onOpenStatus,
     onClose: onCloseStatus,
   } = useDisclosure();
-  const navigate = useNavigate();
 
   const optionsStatus = [
     { value: "Waiting For Payment", label: "Waiting For Payment" },
+    { value: "Waiting For Approval", label: "Waiting For Approval" },
     { value: "Payment Approved", label: "Payment Approved" },
     { value: "Product In Shipment", label: "Product In Shipment" },
     { value: "Success", label: "Success" },
@@ -169,7 +169,10 @@ const AdminTransactionDetail = () => {
     let sumPrice = 0;
 
     for (let i = 0; i < transactionItem.length; i++) {
-      sumPrice = sumPrice + transactionItem[i].current_price;
+      sumPrice =
+        sumPrice +
+        transactionItem[i].current_price +
+        transactionItem[i].applied_discount;
     }
 
     return sumPrice;
@@ -195,7 +198,19 @@ const AdminTransactionDetail = () => {
     }
 
     if (transactionDetail.ReferralVoucherId !== null) {
-      return <Text fontWeight={"normal"}>{"Referral Voucher Used"}</Text>;
+      return (
+        <Text fontWeight={"normal"}>
+          {/* {transactionDetail?.ReferralVoucher?.voucher_name || "Loading..."} */}
+          <Badge
+            colorScheme="green"
+            textAlign={"center"}
+            width={"auto"}
+            fontSize={"13px"}
+          >
+            Referral Voucher Used
+          </Badge>
+        </Text>
+      );
     }
   };
 
@@ -208,19 +223,140 @@ const AdminTransactionDetail = () => {
       );
     }
 
-    if (transactionDetail.VoucherId !== null) {
-      return <Text fontWeight={"normal"}>{"Grocerin Voucher Used"}</Text>;
+    if (transactionDetail?.VoucherId !== null) {
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type ===
+        "Free Shipment"
+      ) {
+        return (
+          <>
+            <Badge
+              colorScheme="green"
+              textAlign={"center"}
+              width={"auto"}
+              fontSize={"13px"}
+            >
+              Free Shipment Voucher
+            </Badge>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.Voucher?.voucher_name || "Loading..."}
+            </Text>
+          </>
+        );
+      }
+
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type ===
+        "Discount Voucher"
+      ) {
+        return (
+          <>
+            <Badge
+              colorScheme="green"
+              textAlign={"center"}
+              width={"auto"}
+              fontSize={"13px"}
+            >
+              Discount Voucher
+            </Badge>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.Voucher?.voucher_name || "Loading..."}
+            </Text>
+          </>
+        );
+      }
+
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type === "Buy 1 Get 1"
+      ) {
+        return (
+          <>
+            <Badge
+              colorScheme="green"
+              textAlign={"center"}
+              width={"auto"}
+              fontSize={"13px"}
+            >
+              Buy 1 Get 1
+            </Badge>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.Voucher?.voucher_name || "Loading..."}
+            </Text>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.Voucher?.Product?.product_name ||
+                "Loading..."}
+            </Text>
+          </>
+        );
+      }
     }
   };
 
   const finalVoucher = () => {
     if (
-      transactionDetail.VoucherId === null &&
-      transactionDetail.ReferralVoucherId === null
+      transactionDetail?.VoucherId === null &&
+      transactionDetail?.ReferralVoucherId === null
     ) {
       return <Text textAlign={"center"}>{"-"}</Text>;
-    } else {
-      return <Text>It used voucher</Text>;
+    } else if (transactionDetail?.ReferralVoucher) {
+      return (
+        <Text>
+          -{" "}
+          {formatRupiah(transactionDetail?.ReferralVoucher?.discount_amount) ||
+            "Loading..."}
+        </Text>
+      );
+    } else if (transactionDetail?.Voucher) {
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type ===
+        "Free Shipment"
+      ) {
+        if (transactionDetail?.Voucher?.discount_amount_nominal) {
+          return (
+            <Text>
+              -{" "}
+              {formatRupiah(
+                transactionDetail?.Voucher?.discount_amount_nominal
+              ) || "Loading..."}
+            </Text>
+          );
+        } else if (transactionDetail?.Voucher?.discount_amount_percentage) {
+          const countShipmentDiscount =
+            (transactionDetail?.Voucher?.discount_amount_percentage / 100) *
+            transactionDetail?.shipment_price;
+          return (
+            <Text>- {formatRupiah(countShipmentDiscount) || "Loading..."}</Text>
+          );
+        }
+      }
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type === "Buy 1 Get 1"
+      ) {
+        return <Text textAlign={"center"}>{"-"}</Text>;
+      }
+
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type ===
+        "Discount Voucher"
+      ) {
+        if (transactionDetail?.Voucher?.discount_amount_nominal) {
+          return (
+            <Text>
+              -{" "}
+              {formatRupiah(
+                transactionDetail?.Voucher?.discount_amount_nominal
+              ) || "Loading..."}
+            </Text>
+          );
+        } else if (transactionDetail?.Voucher?.discount_amount_percentage) {
+          const countProductDiscount =
+            (transactionDetail?.Voucher?.discount_amount_percentage / 100) *
+            transactionDetail?.Voucher?.Product?.product_price;
+          return (
+            <Text>- {formatRupiah(countProductDiscount) || "Loading..."}</Text>
+          );
+        }
+      }
     }
   };
 
@@ -239,7 +375,7 @@ const AdminTransactionDetail = () => {
 
   const renderItemTransaction = () => {
     return transactionItem.map((val) => {
-      const countDiscount = val.current_price - val.applied_discount;
+      const countOriginalPrice = val.current_price + val.applied_discount;
 
       return (
         <Box display={"flex"} mt={"10px"} key={val.id.toString()}>
@@ -262,15 +398,15 @@ const AdminTransactionDetail = () => {
               {val.applied_discount ? (
                 <>
                   <Text ml={"5px"} textDecoration={"line-through"}>
-                    {formatRupiah(val.current_price) || "Loading..."}
+                    {formatRupiah(countOriginalPrice) || "Loading..."}
                   </Text>
                   <Text ml={"5px"}>
-                    {formatRupiah(countDiscount) || "Loading..."}
+                    {formatRupiah(val.current_price) || "Loading..."}
                   </Text>
                 </>
               ) : (
                 <Text ml={"5px"}>
-                  {formatRupiah(val.current_price) || "Loading..."}
+                  {formatRupiah(countOriginalPrice) || "Loading..."}
                 </Text>
               )}
             </Box>
@@ -336,7 +472,6 @@ const AdminTransactionDetail = () => {
                 {transactionDetail?.id || "Loading..."}
               </GridItem>
               <GridItem w="100%" textAlign={"center"}>
-                {/* <Link to={"http://localhost:8000/public/1669690582575.jpeg"}> */}
                 <a href={transactionDetail.payment_proof_img} target="_blank">
                   <Button
                     height={"40px"}
@@ -348,7 +483,6 @@ const AdminTransactionDetail = () => {
                     Payment Proof
                   </Button>
                 </a>
-                {/* </Link> */}
               </GridItem>
             </Grid>
             <Grid templateColumns="repeat(2, 1fr)" gap={3} mt={"5px"}>
@@ -423,7 +557,7 @@ const AdminTransactionDetail = () => {
           <Box>
             <Text fontWeight={"bold"}>Address:</Text>
             <Text fontWeight={"normal"}>
-              {transactionDetail?.User?.Addresses[0].address || "Loading"}
+              {transactionDetail?.User?.Address?.address || "Loading"}
             </Text>
             <Text fontWeight={"bold"} mt={"5px"}>
               Shipping Method:
@@ -458,30 +592,30 @@ const AdminTransactionDetail = () => {
             pt={"20px"}
           >
             <Text>Total Price :</Text>
-            <Text>{formatRupiah(totalPrice()) || "Loading..."}</Text>
+            <Text>{formatRupiah(totalPrice()) || "Rp 0"}</Text>
           </Box>
           <Box h="auto" display={"flex"} justifyContent={"space-between"}>
             <Text>Shipment Price :</Text>
             <Text>
               {transactionDetail.shipment_price
                 ? formatRupiah(transactionDetail?.shipment_price)
-                : "Loading..."}
+                : "Rp 0"}
             </Text>
           </Box>
           <Box h="auto" display={"flex"} justifyContent={"space-between"}>
             <Text>Discount :</Text>
-            <Text>- {formatRupiah(totalDiscount()) || "Loading..."}</Text>
+            <Text>- {formatRupiah(totalDiscount()) || "- Rp 0"}</Text>
           </Box>
           <Box h="auto" display={"flex"} justifyContent={"space-between"}>
             <Text>Voucher :</Text>
-            {finalVoucher()}
+            {finalVoucher() || "- Rp 0"}
           </Box>
           <Box h="auto" display={"flex"} justifyContent={"space-between"}>
             <Text>Grand Total Price :</Text>
             <Text>
               {transactionDetail.total_price
                 ? formatRupiah(transactionDetail?.total_price)
-                : "Loading..."}
+                : "Rp 0"}
             </Text>
           </Box>
         </VStack>
@@ -608,6 +742,7 @@ const AdminTransactionDetail = () => {
               _hover={{
                 bgColor: "green.500",
               }}
+              isDisabled={formik.isSubmitting}
             >
               Submit
             </Button>
