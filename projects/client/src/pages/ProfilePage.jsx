@@ -87,11 +87,6 @@ const ProfilePage = () => {
       console.log(responseAddress);
       setUserLocation(responseAddress.data.data.Addresses[0]);
 
-      setUserData(response.data.data);
-
-      formik.setFieldValue("username", response.data.data.username);
-      formik.setFieldValue("gender", response.data.data.gender);
-      formik.setFieldValue("birth", response.data.data.birth);
     } catch (err) {
       console.log(err);
     }
