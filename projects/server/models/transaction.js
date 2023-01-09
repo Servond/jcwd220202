@@ -36,6 +36,9 @@ module.exports = (sequelize, DataTypes) => {
             shipment_price: {
                 type: DataTypes.INTEGER,
             },
+            expired_date: {
+                type: DataTypes.DATE,
+            },
         },
         {
             sequelize,

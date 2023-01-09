@@ -135,11 +135,10 @@ const transactionController = {
                 attributes: ["expired_date"],
             });
 
-            const getExpDate = Object.values(get.dataValues);
             const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
-            const expDate = moment(getExpDate[0])
-                .add(-7, "hours")
-                .format("YYYY-MM-DD HH:mm:ss");
+            const expDate = moment(get.expired_date).format(
+                "YYYY-MM-DD HH:mm:ss"
+            );
 
             if (currentDate > expDate) {
                 return res.status(200).json({
@@ -150,6 +149,7 @@ const transactionController = {
             await db.Transaction.update(
                 {
                     payment_proof_img: req.file.filename,
+                    transaction_status: "waiting for approval",
                 },
                 {
                     where: {
@@ -174,19 +174,17 @@ const transactionController = {
                 where: {
                     id: req.params.id,
                 },
-                attributes: ["expired_date", "total_price"],
             });
 
-            const getExpDate = Object.values(get.dataValues);
-            const price = Object.values(get.dataValues)[1];
-            const expDate = moment(getExpDate[0])
-                .add(-7, "hours")
-                .format("LLL");
+            const expDate = moment(get.expired_date).format("LLL");
+            const price = get.total_price;
+            const status = get.transaction_status;
 
             return res.status(200).json({
                 message: "Get successful",
                 price,
                 expDate,
+                status,
             });
         } catch (err) {
             console.log(err);
@@ -195,8 +193,26 @@ const transactionController = {
             });
         }
     },
+    createPayment: async (req, res) => {
+        try {
+            const date = moment().add(2, "hours").format("YYYY-MM-DD HH:mm:ss");
+
+            await db.Transaction.create({
+                ...req.body,
+                expired_date: date,
+                transaction_status: "waiting for payment",
+            });
+
+            return res.status(200).json({
+                message: "create transaction",
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({
+                message: "Server error",
+            });
+        }
+    },
 };
 
 module.exports = transactionController;
-
-// PurwadhikaJCWD2202

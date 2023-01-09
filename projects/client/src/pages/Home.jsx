@@ -10,7 +10,7 @@ import {
     Text,
     SimpleGrid,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navigation from "../components/NavigationBar";
 import other from "../assets/4square.png";
 import Carousel from "../components/Banner";
@@ -36,6 +36,13 @@ const Home = () => {
         fetchCategory();
     }, []);
 
+    const navigate = useNavigate();
+
+    const redirectCategory = (id) => {
+        let path = `/product/category?category_id=${id}`;
+        navigate(path);
+    };
+
     return (
         <Box bgColor={"#81B29A"} h={"932px"} mt={"70px"} fontFamily={"roboto"}>
             <SearchBar />
@@ -54,7 +61,12 @@ const Home = () => {
                 >
                     {category.slice(0, 3).map((item) => {
                         return (
-                            <Box display={"grid"}>
+                            <Box
+                                display={"grid"}
+                                onClick={() => {
+                                    redirectCategory(item.id);
+                                }}
+                            >
                                 <Image
                                     justifySelf={"center"}
                                     src={item.icon_url}
@@ -90,7 +102,12 @@ const Home = () => {
                 >
                     {category.slice(0, 7).map((item) => {
                         return (
-                            <Box display={"grid"}>
+                            <Box
+                                display={"grid"}
+                                onClick={() => {
+                                    redirectCategory(item.id);
+                                }}
+                            >
                                 <Image
                                     justifySelf={"center"}
                                     src={item.icon_url}

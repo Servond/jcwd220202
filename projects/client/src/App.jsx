@@ -39,6 +39,7 @@ import CartUser from "./pages/CartPageUser";
 import OrderUser from "./pages/OrderUser";
 import AddVoucherAdmin from "./pages/AddVoucherAdmin";
 import CategoryEdit from "./pages/EditCategory";
+import ProductByCategory from "./pages/ProductByCategory";
 
 const App = () => {
     const authSelector = useSelector((state) => state.auth);
@@ -217,6 +218,10 @@ const App = () => {
                         element={<AddVoucherAdmin />}
                     />
                     <Route path="/user/payment/:id" element={<Payment />} />
+                    <Route
+                        path="/product/category"
+                        element={<ProductByCategory />}
+                    />
                 </Routes>
             </Box>
         </>

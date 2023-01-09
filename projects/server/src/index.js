@@ -33,6 +33,7 @@ const productHistoryRoute = require("./routes/productHistoryRoute");
 const adminTransactionRoute = require("./routes/adminTransactionRoute");
 const passwordRoute = require("./routes/passwordRoute.js");
 const voucherAdminRoute = require("./routes/voucherAdminRoute.js");
+const transactionRoute = require("./routes/transactionRoute");
 
 app.use("/user", loginRoute);
 app.use("/profile", profileRoute);
@@ -48,38 +49,39 @@ app.use("/product-history", productHistoryRoute);
 app.use("/admin-transaction", adminTransactionRoute);
 app.use("/password", passwordRoute);
 app.use("/admin-voucher", voucherAdminRoute);
+app.use("/transaction", transactionRoute);
 
 app.use("/public", express.static("public"));
 
 app.get("/api", (req, res) => {
-  res.send(`Hello, this is my API`);
+    res.send(`Hello, this is my API`);
 });
 
 app.get("/api/greetings", (req, res, next) => {
-  res.status(200).json({
-    message: "Hello, Student !",
-  });
+    res.status(200).json({
+        message: "Hello, Student !",
+    });
 });
 
 // ===========================
 
 // not found
 app.use((req, res, next) => {
-  if (req.path.includes("/api/")) {
-    res.status(404).send("Not found !");
-  } else {
-    next();
-  }
+    if (req.path.includes("/api/")) {
+        res.status(404).send("Not found !");
+    } else {
+        next();
+    }
 });
 
 // error
 app.use((err, req, res, next) => {
-  if (req.path.includes("/api/")) {
-    console.error("Error : ", err.stack);
-    res.status(500).send("Error !");
-  } else {
-    next();
-  }
+    if (req.path.includes("/api/")) {
+        console.error("Error : ", err.stack);
+        res.status(500).send("Error !");
+    } else {
+        next();
+    }
 });
 
 //#endregion
@@ -90,23 +92,21 @@ app.use(express.static(join(__dirname, clientPath)));
 
 // Serve the HTML page
 app.get("*", (req, res) => {
-  res.sendFile(join(__dirname, clientPath, "index.html"));
+    res.sendFile(join(__dirname, clientPath, "index.html"));
 });
 
 //#endregion
 
 app.listen(PORT, async (err) => {
-  db.sequelize.sync({ alter: true });
+    db.sequelize.sync({ alter: true });
 
-  if (!fs.existsSync("public")) {
-    fs.mkdirSync("public");
-  }
+    if (!fs.existsSync("public")) {
+        fs.mkdirSync("public");
+    }
 
-  if (err) {
-    console.log(`ERROR: ${err}`);
-  } else {
-    console.log(`APP RUNNING at ${PORT} ✅`);
-  }
+    if (err) {
+        console.log(`ERROR: ${err}`);
+    } else {
+        console.log(`APP RUNNING at ${PORT} ✅`);
+    }
 });
-
-schedule.invoke();
