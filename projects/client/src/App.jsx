@@ -48,8 +48,6 @@ const App = () => {
   const dispatch = useDispatch();
   const [authCheck, setAuthCheck] = useState(false);
 
-  console.log(authSelector);
-
   const keepUserLoggedIn = async () => {
     try {
       const auth_token = localStorage.getItem("auth_token");
