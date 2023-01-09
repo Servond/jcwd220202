@@ -48,6 +48,8 @@ const App = () => {
   const dispatch = useDispatch();
   const [authCheck, setAuthCheck] = useState(false);
 
+  console.log(authSelector);
+
   const keepUserLoggedIn = async () => {
     try {
       const auth_token = localStorage.getItem("auth_token");
@@ -59,8 +61,6 @@ const App = () => {
 
       const response = await axiosInstance.get("/user/refreshToken");
 
-      dispatch(login(response.data.data));
-
       if (response.data.data.RoleId === 2) {
         dispatch(
           login({
@@ -70,6 +70,17 @@ const App = () => {
           })
         );
       }
+
+      dispatch(
+        login({
+          username: response.data.data.username,
+          email: response.data.data.email,
+          id: response.data.data.id,
+          RoleId: response.data.data.RoleId,
+          is_verified: response.data.data.is_verified,
+        })
+      );
+
       localStorage.setItem("auth_token", response.data.token);
       setAuthCheck(true);
     } catch (err) {
