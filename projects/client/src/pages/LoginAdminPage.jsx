@@ -11,15 +11,15 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import backIcon from "../assets/back_icon.png";
 import grocerinLogoWithText from "../assets/grocerin_logo.png";
 import shoppingPic from "../assets/frozen_food.png";
 import { useFormik } from "formik";
 import { axiosInstance } from "../api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/features/authSlice";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 
 const LoginPage = () => {
   const toast = useToast();
@@ -45,16 +45,17 @@ const LoginPage = () => {
         });
 
         localStorage.setItem("auth_token", response.data.token);
-        dispatch(
-          login({
-            username: response.data.data.username,
-            email: response.data.data.email,
-            id: response.data.data.id,
-            RoleId: response.data.data.RoleId,
-          })
-        );
 
         if (response.data.data.RoleId === 3) {
+          dispatch(
+            login({
+              username: response.data.data.username,
+              email: response.data.data.email,
+              id: response.data.data.id,
+              RoleId: response.data.data.RoleId,
+            })
+          );
+
           navigate("/super-admin/dashboard");
 
           toast({
@@ -66,6 +67,16 @@ const LoginPage = () => {
 
           return;
         }
+
+        dispatch(
+          login({
+            username: response.data.data.username,
+            email: response.data.data.email,
+            id: response.data.data.id,
+            RoleId: response.data.data.RoleId,
+            branch_name: response.data.data.Branch.branch_name,
+          })
+        );
 
         navigate("/admin/dashboard");
 
@@ -84,6 +95,16 @@ const LoginPage = () => {
         });
       }
     },
+    validationSchema: Yup.object({
+      email: Yup.string().required().email(),
+      password: Yup.string()
+        .required()
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+          "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+        ),
+    }),
+    validateOnChange: false,
   });
 
   const formChangeHandler = ({ target }) => {
@@ -97,10 +118,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <Box height={"932px"}>
-        {/* <Box marginTop={"20px"} marginLeft={"20px"}>
-          <Image objectFit="cover" src={backIcon} alt="back" height={"40px"} />
-        </Box> */}
+      <Box height={"932px"} border={"2px solid lightgrey"}>
         <Box marginTop={"70px"}>
           <Image
             src={grocerinLogoWithText}
@@ -119,7 +137,7 @@ const LoginPage = () => {
           fontFamily={"roboto"}
         >
           <form onSubmit={formik.handleSubmit}>
-            <FormControl mt={"10px"}>
+            <FormControl mt={"10px"} isInvalid={formik.errors.email}>
               <FormLabel fontWeight={"bold"}>Email</FormLabel>
               <Input
                 value={formik.values.email}
@@ -171,7 +189,9 @@ const LoginPage = () => {
               color={"#E07A5F"}
               fontWeight={"bold"}
             >
-              <Link to={"/forgot-password"}>Forgot Password</Link>
+              <Link to={"/forgot-password"}>
+                <Text _hover={{ color: "#E07A5F" }}>Forgot Password</Text>
+              </Link>
             </Box>
             <Box marginTop={"20px"} textAlign={"right"}>
               <Button
@@ -183,6 +203,8 @@ const LoginPage = () => {
                 bgColor={"#81B29A"}
                 width={"100px"}
                 height={"35px"}
+                _hover={{ bgColor: "#81B29A" }}
+                isDisabled={formik.isSubmitting}
               >
                 Submit
               </Button>

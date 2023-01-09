@@ -22,7 +22,7 @@ router.post(
 router.post(
   "/free-shipment",
   verifyToken,
-  // validateFreeShipmentVoucher,
+  validateFreeShipmentVoucher,
   adminVoucherController.createFreeShipmentVoucher
 );
 router.post(
@@ -31,5 +31,13 @@ router.post(
   validateBuy1Get1Voucher,
   adminVoucherController.createBuy1Get1Voucher
 );
+
+router.get("/", verifyToken, adminVoucherController.getAllVoucherByBranch);
+
+router.get("/type", verifyToken, adminVoucherController.getVoucherType);
+
+router.delete("/:id", verifyToken, adminVoucherController.deleteVoucherById);
+
+router.get("/active", verifyToken, adminVoucherController.getActiveVoucher);
 
 module.exports = router;

@@ -81,7 +81,7 @@ const AddProductSprAdm = () => {
         newProduct.append("product_price", product_price);
         newProduct.append("product_image", product_image);
         newProduct.append("product_description", product_description);
-        newProduct.append("CategoryId", CategoryId.value);
+        newProduct.append("CategoryId", CategoryId);
 
         const response = await axiosInstance.post("/admin-product", newProduct);
 
@@ -140,11 +140,6 @@ const AddProductSprAdm = () => {
     const { name, value } = target;
     formik.setFieldValue(name, value);
   };
-
-  // const truncate = (string, length) => {
-  //   if (string.length > length) return string.substring(0, length) + "...";
-  //   else return string;
-  // };
 
   useEffect(() => {
     fetchCategory();
@@ -250,12 +245,17 @@ const AddProductSprAdm = () => {
             <FormControl mt={"5px"} isInvalid={formik.errors.CategoryId}>
               <FormLabel fontWeight={"bold"}>Category:</FormLabel>
               <Select
-                value={formik.values.CategoryId || null}
+                value={
+                  formik.values.CategoryId === null
+                    ? null
+                    : renderCategory.find(
+                        ({ value }) => value === formik.values.CategoryId
+                      ) || null
+                }
                 options={renderCategory}
                 styles={colourStyles}
                 name="CategoryId"
                 onChange={(event) => {
-                  console.log(event.value);
                   formik.setFieldValue("CategoryId", event.value);
                 }}
                 placeholder={"Select Category"}

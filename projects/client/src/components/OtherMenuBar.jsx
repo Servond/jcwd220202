@@ -1,21 +1,16 @@
 import {
   Box,
-  Button,
   Image,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import logoutLogo from "../assets/logout.png";
 import statisticLogo from "../assets/statistic.png";
 import { logout } from "../redux/features/authSlice";
@@ -62,9 +57,9 @@ const OtherMenuBar = ({ isOpen, closeModal }) => {
         <ModalOverlay />
         <ModalContent
           position={"fixed"}
-          height={"50vh"}
+          height={"350px"}
           marginX={"auto"}
-          mt={"35vh"}
+          mt={"25vh"}
           right={"0"}
           left={"0"}
           fontFamily={"roboto"}
@@ -121,7 +116,7 @@ const OtherMenuBar = ({ isOpen, closeModal }) => {
               width={"130px"}
               p={"5px"}
               border={"2px solid white"}
-              borderRadius={"20px"}
+              borderRadius={"10px"}
               onClick={logoutBtnHandler}
               mt={"10px"}
               display={"flex"}

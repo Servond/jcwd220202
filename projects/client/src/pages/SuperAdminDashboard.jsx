@@ -1,5 +1,4 @@
-import { Box, Grid, GridItem, Image, Text, VStack } from "@chakra-ui/react";
-import shoppingPic from "../assets/login_logo.png";
+import { Box, Image, Text, VStack } from "@chakra-ui/react";
 import SuperAdminNavbar from "../components/SuperAdminNavbar";
 import UpperBarSprAdm from "../components/UpperBarSprAdm";
 import LineChartSuperAdmin from "../components/LineChartSuperAdmin";
@@ -34,9 +33,12 @@ const SuperAdminDashboard = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     fetchProduct();
     fetchBranch();
-    window.scrollTo(0, 0);
   }, []);
 
   return (
@@ -79,7 +81,9 @@ const SuperAdminDashboard = () => {
             >
               <Text fontSize={"16px"}>Product In Store</Text>
               <Text fontSize={"20px"} fontWeight={"bold"}>
-                {countProduct || "Loading..."}
+                {countProduct !== 0 || countProduct !== null
+                  ? countProduct
+                  : "Loading..."}
               </Text>
             </Box>
           </Link>
@@ -91,7 +95,6 @@ const SuperAdminDashboard = () => {
           boxShadow={"2px 2px 2px grey"}
           display={"flex"}
           width={"100%"}
-          // maxWidth={"385px"}
           justifyContent={"space-evenly"}
         >
           <Box width={"120px"}>
@@ -102,7 +105,7 @@ const SuperAdminDashboard = () => {
               objectFit={"contain"}
             />
           </Box>
-          <Link to={"/super-admin/user"}>
+          <Link to={"/super-admin/branch"}>
             <Box
               width={"120px"}
               mt={"35px"}
@@ -111,7 +114,9 @@ const SuperAdminDashboard = () => {
             >
               <Text fontSize={"16px"}>Branch Available</Text>
               <Text fontSize={"20px"} fontWeight={"bold"}>
-                {countBranch || "Loading..."}
+                {countBranch !== 0 || countBranch !== null
+                  ? countBranch
+                  : "Loading..."}
               </Text>
             </Box>
           </Link>
@@ -141,17 +146,19 @@ const SuperAdminDashboard = () => {
         <LineChartSuperAdmin />
       </Box>
       <Box>
-        <Text
-          textAlign={"right"}
-          marginRight={"30px"}
-          marginTop={"10px"}
-          fontFamily={"roboto"}
-          fontSize={"15px"}
-          color={"#E07A5F"}
-          fontWeight={"bold"}
-        >
-          View more..
-        </Text>
+        <Link to={"/super-admin/statistic"}>
+          <Text
+            textAlign={"right"}
+            marginRight={"30px"}
+            marginTop={"10px"}
+            fontFamily={"roboto"}
+            fontSize={"15px"}
+            color={"#E07A5F"}
+            fontWeight={"bold"}
+          >
+            View more..
+          </Text>
+        </Link>
       </Box>
       <Box>
         <SuperAdminNavbar />

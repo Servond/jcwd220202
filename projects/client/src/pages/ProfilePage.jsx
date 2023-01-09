@@ -25,7 +25,6 @@ import {
   Heading,
   Grid,
   GridItem,
-  useClipboard,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { axiosInstance } from "../api";
@@ -87,6 +86,12 @@ const ProfilePage = () => {
       const responseAddress = await axiosInstance.get(`/profile/activeAddress`);
       console.log(responseAddress);
       setUserLocation(responseAddress.data.data.Addresses[0]);
+
+      setUserData(response.data.data);
+
+      formik.setFieldValue("username", response.data.data.username);
+      formik.setFieldValue("gender", response.data.data.gender);
+      formik.setFieldValue("birth", response.data.data.birth);
     } catch (err) {
       console.log(err);
     }
@@ -187,9 +192,26 @@ const ProfilePage = () => {
   };
   console.log(userLocation);
 
+  const sendVerificationEmail = async () => {
+    try {
+      await axiosInstance.get("/register/user/reverification");
+
+      toast({
+        status: "success",
+        title: "verification sent",
+      });
+    } catch (error) {
+      console.log(error);
+      toast({
+        status: "error",
+        title: "send verification failed",
+      });
+    }
+  };
+
   useEffect(() => {
-    fetchAddress();
     fetchProfile();
+    fetchAddress();
   }, []);
 
   return (
@@ -525,21 +547,58 @@ const ProfilePage = () => {
         <Text fontWeight={"bold"}>Referral Code:</Text>
         <Text>{userData.my_referral_code}</Text>
       </Stack>
-      <Box marginTop={"20px"} textAlign={"center"}>
-        <Button
-          mt={"15px"}
-          color={"white"}
-          type="logout"
-          fontWeight={"bold"}
-          borderRadius={"20px"}
-          bgColor={"#F84040"}
-          width={"100px"}
-          height={"35px"}
-          onClick={logoutBtnHandler}
+      {userData.is_verified === false ? (
+        <Box
+          marginTop={"20px"}
+          display={"flex"}
+          justifyContent={"space-between"}
+          px={"40px"}
         >
-          Logout
-        </Button>
-      </Box>
+          <Button
+            mt={"15px"}
+            color={"white"}
+            type="logout"
+            fontWeight={"bold"}
+            borderRadius={"20px"}
+            bgColor={"#81B29A"}
+            width={"150px"}
+            height={"35px"}
+            onClick={sendVerificationEmail}
+          >
+            Verify Account
+          </Button>
+          <Button
+            mt={"15px"}
+            color={"white"}
+            type="logout"
+            fontWeight={"bold"}
+            borderRadius={"20px"}
+            bgColor={"#F84040"}
+            width={"100px"}
+            height={"35px"}
+            onClick={logoutBtnHandler}
+          >
+            Logout
+          </Button>
+        </Box>
+      ) : (
+        <Box marginTop={"20px"} textAlign={"center"}>
+          <Button
+            mt={"15px"}
+            color={"white"}
+            type="logout"
+            fontWeight={"bold"}
+            borderRadius={"20px"}
+            bgColor={"#F84040"}
+            width={"100px"}
+            height={"35px"}
+            onClick={logoutBtnHandler}
+          >
+            Logout
+          </Button>
+        </Box>
+      )}
+
       <Navigation />
     </Box>
   );

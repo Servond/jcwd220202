@@ -39,6 +39,8 @@ import CartUser from "./pages/CartPageUser";
 import OrderUser from "./pages/OrderUser";
 import AddVoucherAdmin from "./pages/AddVoucherAdmin";
 import CategoryEdit from "./pages/EditCategory";
+import SprAdminStatisctic from "./pages/SprAdminStatistic";
+import AdminStatistic from "./pages/AdminStatistic";
 
 const App = () => {
   const authSelector = useSelector((state) => state.auth);
@@ -57,6 +59,16 @@ const App = () => {
       const response = await axiosInstance.get("/user/refreshToken");
 
       dispatch(login(response.data.data));
+
+      if (response.data.data.RoleId === 2) {
+        dispatch(
+          login({
+            id: response.data.data.id,
+            RoleId: 2,
+            branch_name: response.data.data.Branch.branch_name,
+          })
+        );
+      }
       localStorage.setItem("auth_token", response.data.token);
       setAuthCheck(true);
     } catch (err) {
@@ -189,7 +201,6 @@ const App = () => {
           />
         </Box>
       </Box>
-      // <div>Loading...</div>
     );
   }
 
@@ -199,7 +210,6 @@ const App = () => {
         maxWidth={"480px"}
         margin={"auto"}
         boxSizing={"border-box"}
-        border={"2px solid lightgrey"}
         fontFamily={"roboto"}
       >
         <Routes>
@@ -213,6 +223,7 @@ const App = () => {
           <Route path="/product" element={<ProductPage />} />
           <Route path="/super-admin/category" element={<AdminCategory />} />
           <Route path="/super-admin/category/add" element={<AddCategory />} />
+          <Route path="/category/:id" element={<CategoryEdit />} />
           {/* {renderUserRoutes()} */}
           {/* {renderAdminRoutes()} */}
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -248,14 +259,20 @@ const App = () => {
           <Route path="/super-admin/category/:id" element={<CategoryEdit />} />
           <Route path="/super-admin/create-branch" element={<CreateBranch />} />
           <Route path="/super-admin/branch" element={<UserSprAdmin />} />
-
-          <Route path="/user/cart" element={<CartUser />} />
           <Route path="/user/order/:id" element={<OrderUser />} />
           <Route path="/user/address" element={<AddressPage />} />
           <Route path="/user/payment/:id" element={<Payment />} />
-
           <Route path="/admin/voucher" element={<VoucherAdmin />} />
           <Route path="/admin/voucher/:url" element={<AddVoucherAdmin />} />
+          <Route path="/user/cart" element={<CartUser />} />
+          <Route path="/user/order" element={<OrderUser />} />
+          <Route path="/admin/voucher" element={<VoucherAdmin />} />
+          <Route path="/admin/voucher/:url" element={<AddVoucherAdmin />} />
+          <Route
+            path="/super-admin/statistic"
+            element={<SprAdminStatisctic />}
+          />
+          <Route path="/admin/statistic" element={<AdminStatistic />} />
         </Routes>
       </Box>
     </>
