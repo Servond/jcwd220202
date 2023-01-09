@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       is_checked: {
         type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {

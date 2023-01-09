@@ -28,6 +28,14 @@ const ProductDetailUser = () => {
   const [productDetails, setProductDetails] = useState();
   const [productStock, setProductStock] = useState();
 
+  const formatRupiah = (value) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(value);
+  };
+
   const fetchProductDetails = async () => {
     try {
       const response = await axiosInstance.get(`/product/${params.id}`);
@@ -43,7 +51,7 @@ const ProductDetailUser = () => {
     try {
       let productToAdd = {
         ProductBranchId: productStock.id,
-        quantity: 2,
+        quantity: 1,
         current_price: productDetails.product_price,
       };
       await axiosInstance.post("/transaction/addcart", productToAdd);
@@ -94,7 +102,7 @@ const ProductDetailUser = () => {
                 fontWeight={"extrabold"}
                 color={"#E07A5F"}
               >
-                Rp {productDetails?.product_price}
+                {formatRupiah(productDetails?.product_price)}
               </Text>
             </Box>
 

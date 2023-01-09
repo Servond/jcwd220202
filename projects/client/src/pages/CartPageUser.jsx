@@ -28,23 +28,34 @@ import Navigation from "../components/NavigationBar";
 import ProductBox from "../components/ProductBox";
 import InfiniteScroll from "react-infinite-scroll-component";
 import CheckoutCart from "../components/CheckoutCartList";
+import CartHeader from "../components/CartHeader";
 
 const CartUser = () => {
   const toast = useToast();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
-  const [qty, setQty] = useState(null);
-  console.log(qty);
+
+  const navigate = useNavigate();
+
+  const [checkoutItems, setCheckoutItems] = useState({});
+
   const checkoutButton = async () => {
     try {
-      await axiosInstance.post("/transaction/checkout");
+      const response = await axiosInstance.post("/transaction/checkout");
+
+      setCheckoutItems(response.data.data);
+
+      if (response.data.data.id) {
+        navigate(`/user/order/${response.data.data.id}`);
+      }
 
       toast({ title: "Product checked out", status: "success" });
     } catch (err) {
       console.log(err);
       toast({ title: "Error handling product", status: "error" });
     }
+  };
+  const noItem = () => {
+    toast({ title: "No item to checked out", status: "error" });
   };
 
   const deleteBtnHandler = async (id) => {
@@ -55,71 +66,46 @@ const CartUser = () => {
       toast({ title: "Item deleted", status: "info" });
     } catch (err) {
       console.log(err);
+      toast({ title: "Failed to delete item", status: "error" });
     }
   };
-  // const qtyBtnHandler = async (id) => {
-  //   try {
-  //     let qtyUpdate = {
-  //       quantity: qty,
-  //     };
-  //     await axiosInstance.patch(`/transaction/${id}`, qtyUpdate);
-  //     // fetchCartItems()
-  //     console.log("add qty");
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
   const fetchCartItems = async () => {
     try {
       const response = await axiosInstance.get("/transaction/cart");
-      // const cartArr = [...response];
 
       setCartItems(response.data.data);
     } catch (err) {
       console.log(err);
     }
   };
-  // console.log(cartItems[0]);
+  // console.log(cartItems);
+
+  
 
   const renderCartItems = () => {
     return cartItems.map((val) => {
-      const totalProductTimesQuantity =
-        val.quantity * val.ProductBranch.current_price;
       return (
         <CheckoutCart
           key={val.id.toString()}
+          id={val.id}
+          ProductBranchId={val.ProductBranchId}
           product_name={val.ProductBranch.Product.product_name}
           product_image={val.ProductBranch.Product.product_image}
           quantity={val.quantity}
-          current_price={val.ProductBranch.current_price}
-          total_product_price={totalProductTimesQuantity}
+          current_price={val.current_price}
           onDelete={() => deleteBtnHandler(val.id)}
-          // onQty={() => qtyBtnHandler(val.id)}
-          // handleQty = {(qty) => qtyBtnHandler(val.id) }
         />
       );
     });
   };
-  console.log(cartItems);
-  // const quantityHandler = (value) =>{
-  //   setQty(value)
-  // }
-
-  // const subTotal = () => {
-  //   return total_product_price * qty;
-  // };
-
-  // const result = renderCartItems
-
-  // console.log(renderCartItems())
-
   useEffect(() => {
     fetchCartItems();
   }, []);
 
   return (
     <>
+      <CartHeader />
       <Box
         backgroundColor={"#F4F1DE"}
         height={"100vh"}
@@ -131,9 +117,13 @@ const CartUser = () => {
         <Flex display={"flex"}>
           <Text fontSize={"38px"}> Ini adalah carttttt</Text>
         </Flex>
+        {/* <Box height={"600px"} overflowY={"auto"} > */}
         {renderCartItems()}
-        <Text>ini total </Text>
-        <Button mt={"50px"} onClick={checkoutButton}>
+        {/* </Box> */}
+        <Button
+          mt={"10px"}
+          onClick={cartItems.length == 0 ? noItem : checkoutButton}
+        >
           {"Ceckout gannnnn"}
         </Button>
       </Box>

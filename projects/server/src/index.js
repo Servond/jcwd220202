@@ -33,6 +33,7 @@ const productHistoryRoute = require("./routes/productHistoryRoute");
 const adminTransactionRoute = require("./routes/adminTransactionRoute");
 const passwordRoute = require("./routes/passwordRoute.js");
 const voucherAdminRoute = require("./routes/voucherAdminRoute.js");
+const transactionRoute = require("./routes/transactionRoute.js");
 
 app.use("/user", loginRoute);
 app.use("/profile", profileRoute);
@@ -48,6 +49,7 @@ app.use("/product-history", productHistoryRoute);
 app.use("/admin-transaction", adminTransactionRoute);
 app.use("/password", passwordRoute);
 app.use("/admin-voucher", voucherAdminRoute);
+app.use("/transaction", transactionRoute);
 
 app.use("/public", express.static("public"));
 
