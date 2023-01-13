@@ -86,6 +86,8 @@ const OrderUser = () => {
     try {
       const pinpoint = await axiosInstance.get("/transaction/shipment");
 
+      // console.log(pinpoint);
+
       const originCity = renderCityCode.find((val) => {
         return val.city_name === pinpoint.data.origin.address.split(",")[0];
       });
@@ -262,7 +264,7 @@ const OrderUser = () => {
                 </VStack>
               </Box>
               <Box height="80px" justifyContent={"center"}>
-                <Button size={"lg"} margin={"2"} onClick={postTotal}>
+                <Button size={"lg"} margin={"3"} ml={"20"} onClick={postTotal}>
                   Pay me
                 </Button>
               </Box>

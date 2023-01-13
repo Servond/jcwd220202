@@ -1,13 +1,4 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Flex,
-  Image,
-  Stack,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Flex, Image, Text, useToast } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 const ProductCardUser = ({
@@ -81,7 +72,7 @@ const ProductCardUser = ({
                   {formatRupiah(product_price) || "Rp ---"}
                 </Text>
                 <Text
-                  fontSize={"13px"}
+                  fontSize={"15px"}
                   color={"black"}
                   overflow={"hidden"}
                   textOverflow={"----"}

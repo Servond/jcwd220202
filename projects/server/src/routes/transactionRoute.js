@@ -28,17 +28,7 @@ router.get(
   transactionController.allUserTransactions
 );
 
-// router.post("/", transactionController.createPayment)
-// router.patch(
-//     "/:id",
-//     uploader({
-//         acceptedFileTypes: ["png", "jpg"],
-//         // filePrefix: "PROF",
-//     }).single("payment_proof_img"),
-//     transactionController.updatePayment
-// )
-
-router.put(
+router.patch(
   "/payment-done/check/:id",
   uploader({
     acceptedFileTypes: ["png", "jpeg", "jpg"],
