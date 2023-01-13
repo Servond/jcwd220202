@@ -136,6 +136,8 @@ const Home = () => {
       // setProduct([...product, ...response.data.data[0].ProductBranches]);
       setProduct(response.data.data[0].ProductBranches);
 
+      console.log("inii", response);
+
       // console.log(response.data.data[0].ProductBranches);
       // setTotalCount(response.data.dataCount);
       // setMaxPage(Math.ceil(response.data.dataCount / maxItemsPerPage));
@@ -145,6 +147,7 @@ const Home = () => {
       console.log(error);
     }
   };
+  // console.log(product);
 
   const sortProductHandler = (event) => {
     setSortBy(event.value.split(" ")[0]);
