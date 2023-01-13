@@ -239,6 +239,8 @@ const OrderUser = () => {
             right={"0"}
             left={"0"}
             fontWeight={"bold"}
+            margin={"auto"}
+            maxWidth={"480px"}
           >
             <SimpleGrid columns={2} spacing={5}>
               <Box height="80px" paddingLeft={"5"}>
@@ -255,7 +257,7 @@ const OrderUser = () => {
                 </VStack>
               </Box>
               <Box height="80px" justifyContent={"center"}>
-                <Button size={"lg"} margin={"2"} onClick={postTotal}>
+                <Button size={"lg"} margin={"3"} ml={"20"} onClick={postTotal}>
                   Pay me
                 </Button>
               </Box>

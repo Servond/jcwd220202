@@ -59,7 +59,7 @@ const CheckoutCart = ({
   };
 
   useEffect(() => {
-    qtyBtnHandler()
+    qtyBtnHandler();
   }, []);
 
   return (

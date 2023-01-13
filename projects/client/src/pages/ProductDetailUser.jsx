@@ -123,9 +123,13 @@ const ProductDetailUser = () => {
         right={"0"}
         left={"0"}
         fontWeight={"bold"}
+        margin={"auto"}
+        maxWidth={"480px"}
       >
-        <Box>
-          <Button onClick={addCartBtn}>add to cart</Button>
+        <Box height="80px" justifyContent={"center"}>
+          <Button size={"lg"} margin={"3"} onClick={addCartBtn}>
+            add to cart
+          </Button>
         </Box>
       </Box>
     </Box>

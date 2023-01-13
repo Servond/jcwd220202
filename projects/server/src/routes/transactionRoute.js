@@ -23,16 +23,6 @@ router.patch(
 );
 router.get("/shipment", verifyToken, transactionController.shipmentCourse);
 
-// router.post("/", transactionController.createPayment)
-// router.patch(
-//     "/:id",
-//     uploader({
-//         acceptedFileTypes: ["png", "jpg"],
-//         // filePrefix: "PROF",
-//     }).single("payment_proof_img"),
-//     transactionController.updatePayment
-// )
-
 router.patch(
   "/:id",
   uploader({
