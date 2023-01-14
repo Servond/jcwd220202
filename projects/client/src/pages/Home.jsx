@@ -120,7 +120,7 @@ const Home = () => {
       };
     },
   };
-  console.log(authSelector);
+
   const fetchAdminProduct = async () => {
     const maxItemsPerPage = 12;
     if (authSelector.id === 0) {
