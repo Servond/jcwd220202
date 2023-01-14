@@ -388,8 +388,6 @@ const productController = {
 
       const parsePickBranch = JSON.parse(JSON.stringify(pickBranch));
 
-      console.log(parsePickBranch[0].id);
-
       const {
         product_name = "",
         product_price = "",
