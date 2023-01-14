@@ -120,7 +120,7 @@ const Home = () => {
       };
     },
   };
-
+  console.log(authSelector);
   const fetchAdminProduct = async () => {
     const maxItemsPerPage = 12;
     if (authSelector.id === 0) {
@@ -359,7 +359,7 @@ const Home = () => {
                   w={"50px"}
                   alignItems={"center"}
                 />
-                <Text fontSize={"xs"}>{item.category_name}</Text>
+                <Text fontSize={"14px"}>{item.category_name}</Text>
               </Box>
             );
           })}
