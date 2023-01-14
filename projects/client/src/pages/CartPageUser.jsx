@@ -45,7 +45,7 @@ const CartUser = () => {
       const response = await axiosInstance.post("/transaction/checkout");
 
       setCheckoutItems(response.data.data);
-
+      console.log(response);
       if (response.data.data.id) {
         navigate(`/user/order/${response.data.data.id}`);
       }
@@ -130,7 +130,7 @@ const CartUser = () => {
           <Flex display={"flex"}>
             <Text fontSize={"38px"}> Ini adalah carttttt</Text>
           </Flex>
-          {renderCartItems()}
+          <Box mt={"40px"}>{renderCartItems()}</Box>
           <Box>
             <Button
               w={"90%"}

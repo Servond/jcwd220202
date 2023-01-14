@@ -296,13 +296,13 @@ const AdminTransactionDetail = () => {
       transactionDetail?.VoucherId === null &&
       transactionDetail?.ReferralVoucherId === null
     ) {
-      return <Text textAlign={"center"}>{"-"}</Text>;
+      return <Text textAlign={"center"}>{"- Rp 0"}</Text>;
     } else if (transactionDetail?.ReferralVoucher) {
       return (
         <Text>
           -{" "}
           {formatRupiah(transactionDetail?.ReferralVoucher?.discount_amount) ||
-            "Loading..."}
+            "- Rp 0"}
         </Text>
       );
     } else if (transactionDetail?.Voucher) {
@@ -316,7 +316,7 @@ const AdminTransactionDetail = () => {
               -{" "}
               {formatRupiah(
                 transactionDetail?.Voucher?.discount_amount_nominal
-              ) || "Loading..."}
+              ) || "- Rp 0"}
             </Text>
           );
         } else if (transactionDetail?.Voucher?.discount_amount_percentage) {
@@ -324,14 +324,14 @@ const AdminTransactionDetail = () => {
             (transactionDetail?.Voucher?.discount_amount_percentage / 100) *
             transactionDetail?.shipment_price;
           return (
-            <Text>- {formatRupiah(countShipmentDiscount) || "Loading..."}</Text>
+            <Text>- {formatRupiah(countShipmentDiscount) || "- Rp 0"}</Text>
           );
         }
       }
       if (
         transactionDetail?.Voucher?.VoucherType?.voucher_type === "Buy 1 Get 1"
       ) {
-        return <Text textAlign={"center"}>{"-"}</Text>;
+        return <Text textAlign={"center"}>{"- Rp 0"}</Text>;
       }
 
       if (
@@ -344,7 +344,7 @@ const AdminTransactionDetail = () => {
               -{" "}
               {formatRupiah(
                 transactionDetail?.Voucher?.discount_amount_nominal
-              ) || "Loading..."}
+              ) || "- Rp 0"}
             </Text>
           );
         } else if (transactionDetail?.Voucher?.discount_amount_percentage) {
@@ -352,7 +352,7 @@ const AdminTransactionDetail = () => {
             (transactionDetail?.Voucher?.discount_amount_percentage / 100) *
             transactionDetail?.Voucher?.Product?.product_price;
           return (
-            <Text>- {formatRupiah(countProductDiscount) || "Loading..."}</Text>
+            <Text>- {formatRupiah(countProductDiscount) || "- Rp 0"}</Text>
           );
         }
       }
@@ -469,7 +469,12 @@ const AdminTransactionDetail = () => {
             </Grid>
             <Grid templateColumns="repeat(2, 1fr)" gap={3} mt={"5px"}>
               <GridItem w="100%" mt={"8px"} fontWeight={"bold"}>
-                {transactionDetail?.id || "Loading..."}
+                <Box display={"flex"}>
+                  <Text>Transaction ID:</Text>
+                  <Text ml={"5px"}>
+                    {transactionDetail?.id || "Loading..."}
+                  </Text>
+                </Box>
               </GridItem>
               <GridItem w="100%" textAlign={"center"}>
                 <a href={transactionDetail.payment_proof_img} target="_blank">
@@ -563,7 +568,7 @@ const AdminTransactionDetail = () => {
               Shipping Method:
             </Text>
             <Text fontWeight={"normal"}>
-              {transactionDetail?.shipping_method || "Loading..."}
+              {`JNE ${transactionDetail?.shipping_method}` || "Loading..."}
             </Text>
           </Box>
         </VStack>

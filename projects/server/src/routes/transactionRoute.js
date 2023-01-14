@@ -53,5 +53,6 @@ router.get(
   verifyToken,
   transactionController.userTransactionById
 );
+router.post("/history/:id", verifyToken, transactionController.orderAccepted);
 
 module.exports = router;
