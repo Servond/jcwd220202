@@ -268,6 +268,7 @@ const Home = () => {
             </InputGroup>
           </FormControl>
           {!authSelector.RoleId == "1" ? (
+            // <Link to="/login/user" mt={"30px"}>
             <Box
               p={"3"}
               mr={"5"}
@@ -275,15 +276,17 @@ const Home = () => {
               borderRadius="10px"
               as="b"
               _hover={{
-                background: "white",
-                color: "#E07A5F",
+                // background: "white",
+                color: "white",
                 transition: "all 1000ms ease",
                 cursor: "pointer",
               }}
+              onClick={() => navigate("/login/user")}
             >
-              <Link to="/login/user">Login</Link>
+              Login
             </Box>
           ) : (
+            // </Link>
             <Image
               src={grocerinLogo}
               alt="logo"
@@ -311,6 +314,7 @@ const Home = () => {
           {category.slice(0, 3).map((item) => {
             return (
               <Box
+                key={item.id.toString()}
                 display={"grid"}
                 onClick={() => {
                   redirectCategory(item.id);
@@ -350,6 +354,7 @@ const Home = () => {
           {category.slice(0, 7).map((item) => {
             return (
               <Box
+                key={item.id.toString()}
                 display={"grid"}
                 onClick={() => {
                   redirectCategory(item.id);
@@ -397,14 +402,13 @@ const Home = () => {
                 textAlign={"Left"}
                 borderRadius={"5px"}
               >
-                <GridItem w="100%" h="10" display={"flex"} ml={"8px"}>
-                  <Image
-                    src={sortIcon}
-                    alt="search"
-                    height={"20px"}
-                    ml={"10px"}
-                    mt={"10px"}
-                  />
+                <GridItem
+                  w="100%"
+                  h="10"
+                  display={"flex"}
+                  ml={"8px"}
+                  mt={"10px"}
+                >
                   <Select
                     bgColor={"#81B29A"}
                     placeholder={"Sort"}
