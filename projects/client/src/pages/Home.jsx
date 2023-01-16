@@ -142,7 +142,11 @@ const Home = () => {
   };
 
   const pagination = () => {
-    if (product.length !== 0 || authSelector.is_verified !== false) {
+    if (
+      product.length !== 0 ||
+      authSelector.is_verified !== false ||
+      authSelector.id !== 0
+    ) {
       return (
         <>
           <ReactPaginate
@@ -204,17 +208,21 @@ const Home = () => {
     });
   };
   const userIsNotLegible = () => {
-    if (product.length === 0 || authSelector.is_verified === false) {
-      return (
-        <>
-          <Box display={"grid"} mt={"10vh"}>
-            <Text textAlign={"center"} fontWeight={"bold"}>
-              Please verify account and choose address <br />
-              in the profile.
-            </Text>
-          </Box>
-        </>
-      );
+    if (authSelector.id !== 0) {
+      if (product.length === 0 || authSelector.is_verified === false) {
+        return (
+          <>
+            <Box display={"grid"} mt={"10vh"}>
+              <Text textAlign={"center"} fontWeight={"bold"}>
+                Please verify account and choose address <br />
+                in the profile.
+              </Text>
+            </Box>
+          </>
+        );
+      } else {
+        return null;
+      }
     }
   };
 
