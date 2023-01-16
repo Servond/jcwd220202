@@ -207,7 +207,6 @@ const Home = () => {
       );
     });
   };
-  console.log(authSelector);
   const userIsNotLegible = () => {
     if (authSelector.id !== 0) {
       if (product.length === 0 || authSelector.is_verified === false) {
