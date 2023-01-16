@@ -121,8 +121,6 @@ const Home = () => {
     setActivePage(currentPage);
     myRef.current.scrollIntoView();
   };
-  console.log(activePage);
-  console.log(product);
 
   const sortProductHandler = (e) => {
     setSortBy(e.split(" ")[0]);
@@ -144,26 +142,33 @@ const Home = () => {
   };
 
   const pagination = () => {
-    return (
-      <ReactPaginate
-        previousLabel={"<"}
-        nextLabel={">"}
-        breakLabel={"..."}
-        pageCount={maxPage}
-        marginPagesDisplayed={0}
-        pageRangeDisplayed={0}
-        onPageChange={handlePageClick}
-        containerClassName={"pagination justify-content-center"}
-        pageClassName={"page-item"}
-        pageLinkClassName={"page-link"}
-        previousClassName={"page-item"}
-        previousLinkClassName={"page-link"}
-        nextClassName={"page-item"}
-        nextLinkClassName={"page-link"}
-        breakClassName={"page-item"}
-        breakLinkClassName={"page-link"}
-      />
-    );
+    if (product.length !== 0 || authSelector.is_verified !== false) {
+      return (
+        <>
+          <ReactPaginate
+            previousLabel={"<"}
+            nextLabel={">"}
+            breakLabel={"..."}
+            pageCount={maxPage}
+            marginPagesDisplayed={1}
+            pageRangeDisplayed={2}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination justify-content-center"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName={"page-item"}
+            previousLinkClassName={"page-link"}
+            nextClassName={"page-item"}
+            nextLinkClassName={"page-link"}
+            breakClassName={"page-item"}
+            breakLinkClassName={"page-link"}
+            activeClassName={"active"}
+          />
+        </>
+      );
+    } else {
+      return null;
+    }
   };
 
   const renderProduct = () => {
@@ -198,12 +203,25 @@ const Home = () => {
       );
     });
   };
+  const userIsNotLegible = () => {
+    if (product.length === 0 || authSelector.is_verified === false) {
+      return (
+        <>
+          <Box display={"grid"} mt={"10vh"}>
+            <Text textAlign={"center"} fontWeight={"bold"}>
+              Please verify account and choose address <br />
+              in the profile.
+            </Text>
+          </Box>
+        </>
+      );
+    }
+  };
+
   useEffect(() => {
     fetchAdminProduct();
   }, [sortBy, sortDir, filter, currentSearch, activePage]);
-  // useEffect(() => {
-  //   stickyHeader();
-  // }, []);
+
   return (
     <Box bgColor={"#81B29A"} mt={"20px"}>
       <Box
@@ -355,7 +373,7 @@ const Home = () => {
       <Box
         bgColor={"#F4F1DE"}
         mt={"10px"}
-        mb={"80px"}
+        pb={"80px"}
         // position={"relative"}
         // h={"100vh"}
         position={"sticky"}
@@ -397,31 +415,12 @@ const Home = () => {
               </Grid>
             </GridItem>
           </Grid>
+          {userIsNotLegible()}
           <SimpleGrid minChildWidth="180px" spacing="10px" mt={"30px"}>
             {renderProductWithoutUser()}
             {renderProduct()}
           </SimpleGrid>
-          <Box marginTop={"20px"}>
-            <ReactPaginate
-              previousLabel={"<"}
-              nextLabel={">"}
-              breakLabel={"..."}
-              pageCount={maxPage}
-              marginPagesDisplayed={1}
-              pageRangeDisplayed={2}
-              onPageChange={handlePageClick}
-              containerClassName={"pagination justify-content-center"}
-              pageClassName={"page-item"}
-              pageLinkClassName={"page-link"}
-              previousClassName={"page-item"}
-              previousLinkClassName={"page-link"}
-              nextClassName={"page-item"}
-              nextLinkClassName={"page-link"}
-              breakClassName={"page-item"}
-              breakLinkClassName={"page-link"}
-              activeClassName={"active"}
-            />
-          </Box>
+          <Box marginTop={"20px"}>{pagination()}</Box>
         </Box>
       </Box>
 
