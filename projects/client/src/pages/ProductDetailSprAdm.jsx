@@ -133,9 +133,9 @@ const ProductDetailSprAdm = () => {
 
   const formik = useFormik({
     initialValues: {
-      product_name: productDetail.product_name,
-      product_price: productDetail.product_price,
-      product_description: productDetail.product_description,
+      product_name: productDetail?.product_name,
+      product_price: productDetail?.product_price,
+      product_description: productDetail?.product_description,
       product_image: null,
       CategoryId: null,
     },
@@ -150,22 +150,22 @@ const ProductDetailSprAdm = () => {
       try {
         const productData = new FormData();
 
-        if (product_name && product_name !== productDetail.product_name) {
+        if (product_name && product_name !== productDetail?.product_name) {
           productData.append("product_name", product_name);
         }
 
         if (
           product_description &&
-          product_description !== productDetail.product_description
+          product_description !== productDetail?.product_description
         ) {
           productData.append("product_description", product_description);
         }
 
-        if (product_price && product_price !== productDetail.product_price) {
+        if (product_price && product_price !== productDetail?.product_price) {
           productData.append("product_price", product_price);
         }
 
-        if (CategoryId && CategoryId !== productDetail.CategoryId) {
+        if (CategoryId && CategoryId !== productDetail?.CategoryId) {
           productData.append("CategoryId", CategoryId.value);
         }
 
@@ -249,7 +249,7 @@ const ProductDetailSprAdm = () => {
                 src={
                   formik?.values?.product_image
                     ? selectedImage
-                    : productDetail.product_image
+                    : productDetail?.product_image
                 }
                 alt="search"
                 objectFit={"contain"}
@@ -489,7 +489,7 @@ const ProductDetailSprAdm = () => {
                 maxWidth={"420px"}
               >
                 <Text mx={"16px"}>
-                  {productDetail.product_description || "Loading..."}
+                  {productDetail?.product_description || "Loading..."}
                 </Text>
               </Box>
             </Box>

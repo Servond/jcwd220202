@@ -36,8 +36,7 @@ const ProductDetailUser = () => {
       console.log(err);
     }
   };
-  console.log("stok", productStock);
-  console.log("deteil", productDetails);
+
   const priceAfterDisc = () => {
     let totalPrice = 0;
     if (
@@ -103,7 +102,7 @@ const ProductDetailUser = () => {
         <VStack spacing={4} align="stretch" mt={"90px"}>
           <Box h="300px" display={"flex"} justifyContent={"center"}>
             <Image
-              src={productDetails?.product_image}
+              src={productDetails?.product_image || "Loading..."}
               alt="search"
               objectFit={"contain"}
               height={"100%"}
@@ -116,24 +115,26 @@ const ProductDetailUser = () => {
                 fontWeight={"extrabold"}
                 color={"#E07A5F"}
               >
-                {formatRupiah(priceAfterDisc())}
+                {formatRupiah(priceAfterDisc() || 0)}
               </Text>
             </Box>
 
             <Box fontWeight={""} mt={"5px"}>
-              <Text fontSize={"24px"}>{productDetails?.product_name}</Text>
+              <Text fontSize={"24px"}>
+                {productDetails?.product_name || "Loading..."}
+              </Text>
             </Box>
 
             <Box fontWeight={"normal"} mt={"5px"}>
               <HStack fontSize={"16px"}>
                 <Text>Stock</Text>
-                <Text color={"#E07A5F"}>{productStock?.stock}</Text>
+                <Text color={"#E07A5F"}>{productStock?.stock || 0}</Text>
               </HStack>
             </Box>
 
             <Box fontWeight={"normal"} mt={"5px"}>
               <Text fontSize={"18px"}>
-                {productDetails?.product_description}
+                {productDetails?.product_description || "Loading..."}
               </Text>
             </Box>
           </Box>

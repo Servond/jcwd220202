@@ -212,7 +212,7 @@ const transactionController = {
 
       await db.Transaction.update(
         {
-          payment_proof_img: req.file.filename,
+          payment_proof_img: `${process.env.SERVER_URL}/${req.file.filename}`,
           transaction_status: "Waiting For Approval",
         },
         {

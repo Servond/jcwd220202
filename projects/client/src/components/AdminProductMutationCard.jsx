@@ -23,6 +23,14 @@ const AdminProductMutationCard = ({
   };
 
   const showStockMovement = () => {
+    if (remarks === "Market Activity") {
+      return (
+        <Text ml={"5px"} color={"red"}>
+          {`-${stock_movement}` || 0}
+        </Text>
+      );
+    }
+
     if (initial_stock < current_stock) {
       return (
         <Text ml={"5px"} color={"green"}>

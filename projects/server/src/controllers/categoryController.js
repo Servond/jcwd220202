@@ -20,10 +20,7 @@ const categoryController = {
         });
       }
 
-      const icon_url = path.resolve(
-        __dirname,
-        `../../public//${req.file.filename}`
-      );
+      const icon_url = `${process.env.SERVER_URL}/${req.file.filename}`;
 
       const newCategory = await db.Category.create({
         category_name: category_name,

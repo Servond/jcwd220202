@@ -96,6 +96,7 @@ const OrderUser = () => {
           val.city_name === pinpoint.data.destination.address.split(",")[0]
         );
       });
+
       const ongkirs = await axiosInstance.get(
         `/geocode/expeditionprice/${originCity.city_id}/${
           destinationCity.city_id

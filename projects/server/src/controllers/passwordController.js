@@ -6,6 +6,7 @@ const handlebars = require("handlebars");
 const emailer = require("../../lib/emailer");
 const fs = require("fs");
 const { signToken, decodeToken } = require("../../lib/password");
+const path = require("path");
 
 const PasswordController = {
   sendEmail: async (req, res) => {
@@ -26,8 +27,10 @@ const PasswordController = {
         const resetPassLink = `${process.env.DOMAIN_NAME}/reentry-password?token=${token}`;
 
         const rawHTML = fs.readFileSync(
-          path.resolve(__dirname, "../../templates/forgot_pass.html", "utf-8")
+          path.resolve(__dirname, "../../templates/forgot_pass.html"),
+          "utf-8"
         );
+
         const compiledHTML = handlebars.compile(rawHTML);
         const htmlResult = compiledHTML({
           resetPassLink,

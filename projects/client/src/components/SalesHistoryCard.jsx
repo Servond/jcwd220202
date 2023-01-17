@@ -69,7 +69,7 @@ const SalesHistoryCard = ({
                 <Text ml={"5px"}>{TransactionId || "Loading..."}</Text>
               </Box>
               <Box display={"flex"}>
-                <Text fontWeight={"bold"}>Branch Name: </Text>
+                <Text fontWeight={"bold"}>Branch: </Text>
                 <Text
                   ml={"5px"}
                   overflow={"hidden"}

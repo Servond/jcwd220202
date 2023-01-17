@@ -37,6 +37,12 @@ import { useSelector } from "react-redux";
 import ReactPaginate from "react-paginate";
 import grocerinLogo from "../assets/grocerin_logo_aja.png";
 import { useRef } from "react";
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from "@chakra-ui/react";
 
 const Home = () => {
   const [keywordHandler, setKeywordHandler] = useState("");
@@ -212,12 +218,12 @@ const Home = () => {
       if (product.length === 0 || authSelector.is_verified === false) {
         return (
           <>
-            <Box display={"grid"} mt={"10vh"}>
-              <Text textAlign={"center"} fontWeight={"bold"}>
-                Please verify account and choose address <br />
-                in the profile.
-              </Text>
-            </Box>
+            <Alert status="warning" mt={"40px"}>
+              <AlertIcon />
+              <AlertDescription>
+                Please Verify Account and Choose Address in Profile Page
+              </AlertDescription>
+            </Alert>
           </>
         );
       } else {

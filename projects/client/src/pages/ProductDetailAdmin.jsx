@@ -80,8 +80,6 @@ const ProductDetailAdmin = () => {
           }
         );
 
-        console.log(response);
-
         fetchProductDetail();
         setEditMode(false);
 
@@ -107,8 +105,6 @@ const ProductDetailAdmin = () => {
     }),
     validateOnChange: false,
   });
-
-  console.log(formik.values);
 
   const discountPercentageHandler = (value) => {
     formik.setFieldValue("discount_amount_percentage", value);

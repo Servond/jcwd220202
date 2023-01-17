@@ -13,7 +13,10 @@ const productController = {
 
       const userCoordinate = await db.Address.findOne({
         where: {
-          UserId: req.user.id,
+          [Op.and]: {
+            UserId: req.user.id,
+            is_active: true,
+          },
         },
         include: [
           {
